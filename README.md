@@ -1,7 +1,6 @@
 # TSCT Portal
 
-[![Build Status](https://travis-ci.org/ts-cset/180-project-structure.svg?branch=master)](https://travis-ci.org/ts-cset/180-project-structure)
-
+[![Build Status](https://travis-ci.org/ts-cset/grey-portal.svg?branch=master)](https://travis-ci.org/ts-cset/grey-portal)
 The unofficial learning management system for Thaddeus Stevens College of Technology built on Python, Flask, and PostgreSQL.
 
 
