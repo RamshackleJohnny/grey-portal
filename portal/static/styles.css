@@ -1,0 +1,63 @@
+/**
+ * Global Defaults and Typography
+ */
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Lato', Helvetica, Arial, sans-serif;
+  font-size: 18px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Crimson Text', serif;
+  font-weight: 400;
+}
+
+
+/**
+ * Layout
+ */
+body {
+  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+@media (min-width: 760px) {
+  footer {
+    display: flex;
+    justify-content: space-between;
+  }
+  footer h2,
+  footer address {
+    width: 40%;
+  }
+}
+
+
+/**
+ * Forms
+ */
+form {
+  border: 1px solid black;
+  margin: 0 auto;
+  padding: 1rem;
+  width: 35vw;
+}
+
+label {
+  display: block;
+  padding-bottom: 1rem;
+}
+
+label input {
+  width: 100%;
+}
+
+

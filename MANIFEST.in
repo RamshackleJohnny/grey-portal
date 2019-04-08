@@ -1,0 +1,4 @@
+include portal/schema.sql
+graft portal/static
+graft portal/templates
+global-exclude *.pyc
