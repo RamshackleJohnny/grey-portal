@@ -36,7 +36,10 @@ def create_app(test_config=None):
             print(password)
             connection = psycopg2.connect(database = "portal")
             cursor = connection.cursor()
-            #user = cursor.execute('SELECT * FROM user WHERE email = %s', (email).fetchone()
-        return 'Hello word'
+            cursor.execute("SELECT * FROM users WHERE email = %s", (email,)) 
+            username = cursor.fetchone()
+            print(username)
+            
+        return render_template('login.html')
 
     return app
