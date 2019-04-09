@@ -36,9 +36,13 @@ def create_app(test_config=None):
             print(password)
             connection = psycopg2.connect(database = "portal")
             cursor = connection.cursor()
-            cursor.execute("SELECT * FROM users WHERE email = %s", (email,)) 
-            username = cursor.fetchone()
-            print(username)
+            cursor.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email,password)) 
+            userdata = cursor.fetchone()
+            wrong = 'username or password is incorrect'
+            if userdata == None:
+                return render_template('index.html', wrong=wrong)
+            print(userdata)
+
             
         return render_template('login.html')
 
