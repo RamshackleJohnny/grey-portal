@@ -1,5 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
+import psycopg2
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -20,8 +21,22 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
 
-    @app.route('/', methods=('GET', 'POST'))
+    @app.route('/', methods=['GET', 'POST'])
     def index():
         return render_template('index.html')
+
+    @app.route('/login', methods=['GET', 'POST'])
+    def login():
+        if request.method == 'POST':
+            error = None
+            print('Lets get it started!')
+            email = request.form['email']
+            password = request.form['password']
+            print(email)
+            print(password)
+            connection = psycopg2.connect(database = "portal")
+            cursor = connection.cursor()
+            #user = cursor.execute('SELECT * FROM user WHERE email = %s', (email).fetchone()
+        return 'Hello word'
 
     return app
