@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect, url_for
 
 import psycopg2
 
@@ -25,6 +25,10 @@ def create_app(test_config=None):
     def index():
         return render_template('index.html')
 
+    @app.route('/dashboard', methods=['GET', 'POST'])
+    def dash():
+        return render_template('dash.html')
+
     @app.route('/login', methods=['GET', 'POST'])
     def login():
         if request.method == 'POST':
@@ -36,13 +40,13 @@ def create_app(test_config=None):
             print(password)
             connection = psycopg2.connect(database = "portal")
             cursor = connection.cursor()
-            cursor.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email,password,)) 
+            cursor.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email,password,))
             userdata = cursor.fetchone()
             wrong = 'username or password is incorrect'
             if userdata == None:
                 return render_template('index.html', wrong=wrong)
             else:
-                return render_template('login.html')
+                return redirect(url_for('dash'))
             print(userdata)
         return render_template('index.html')
 
