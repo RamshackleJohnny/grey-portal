@@ -27,7 +27,7 @@ def create_app(test_config=None):
 
     @app.route('/dashboard', methods=['GET', 'POST'])
     def dash():
-        print(session['user_id'])
+        # print(session['user_id'])
         return render_template('dash.html')
 
     @app.route('/login', methods=['GET', 'POST'])
@@ -48,9 +48,10 @@ def create_app(test_config=None):
                 return render_template('index.html', wrong=wrong)
             else:
                 cursor.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email,password,))
-                users= cursor.fetchone()
-                session.clear()
-                session['user_id'] = users['id']
+                # sesh = cursor.fetchone()
+                # print(sesh['id'])
+                # session.clear()
+                # session['user_id'] = users['id']
 
                 return redirect(url_for('dash'))
             print(userdata)
