@@ -17,19 +17,24 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
-
-
     from . import db
     db.init_app(app)
 
+    # @app.before_first_request
+    # def ahhhhhh():
+        # user_id = None
+#
     # @app.before_request
     # def before_request():
-        # if (not 'logged_in' in session) and (current_url != '/login'):
-            # return redirect(url_for('login'))
-        # pass
+        # if user_id is None:
+            # return redirect(url_for('index'))
+        # else:
+            # user_id = session['user_id']
+            # print(user_id)
 
     @app.route('/', methods=['GET', 'POST'])
     def index():
+        session['user_id'] = None
         return render_template('index.html')
 
     @app.route('/dashboard', methods=['GET', 'POST'])
@@ -59,7 +64,6 @@ def create_app(test_config=None):
                 session['user_id'] = sesh['id']
                 print(session['user_id'])
                 return redirect(url_for('dash'))
-            print(userdata)
         return render_template('index.html')
 
 
