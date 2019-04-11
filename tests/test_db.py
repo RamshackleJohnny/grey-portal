@@ -28,3 +28,16 @@ def test_init_db_command(runner, monkeypatch):
     assert 'Initialized' in result.output
     assert Recorder.called
 
+
+
+def test_add_user_command(runner, monkeypatch):
+    class Recorder(object):
+        called = False
+
+    def fake_add_user():
+        Recorder.called = True
+
+    monkeypatch.setattr('portal.db.add_user', fake_add_user)
+    result = runner.invoke(args=['add-user'])
+    assert 'user' in result.output
+    assert Recorder.called

@@ -36,7 +36,17 @@ def init_db():
         cur.execute(f.read())
         cur.close()
         db.commit()
-        
+
+def add_user():
+    db = get_db()
+    cur = db.cursor()
+    user_email = input("User Email: ")
+    user_password = input("User Password: ")
+    user_role= input("User Role (student/teacher): ")
+    cur.execute("INSERT INTO users (email, password, role) VALUES(%s, %s, %s)", (user_email, user_password, user_role))
+    db.commit()
+    cur.close()
+
 
 @click.command('init-db')
 @with_appcontext
@@ -45,8 +55,14 @@ def init_db_command():
     init_db()
     click.echo('Initialized the database.')
 
+@click.command('add-user')
+@with_appcontext
+def add_user_command():
+    """Create new user"""
+    add_user()
+    click.echo('Created user.')
 
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
-
+    app.cli.add_command(add_user_command)
