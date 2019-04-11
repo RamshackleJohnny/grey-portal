@@ -20,26 +20,12 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
 
-    # @app.before_first_request
-    # def ahhhhhh():
-        # user_id = None
-#
-    # @app.before_request
-    # def before_request():
-        # if user_id is None:
-            # return redirect(url_for('index'))
-        # else:
-            # user_id = session['user_id']
-            # print(user_id)
-
     @app.route('/', methods=['GET', 'POST'])
     def index():
-        session['user_id'] = None
         return render_template('index.html')
 
     @app.route('/dashboard', methods=['GET', 'POST'])
     def dash():
-        print(session['user_id'])
         return render_template('dash.html')
 
     @app.route('/login', methods=['GET', 'POST'])
@@ -60,9 +46,6 @@ def create_app(test_config=None):
                 dict_cur = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
                 dict_cur.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email,password,))
                 sesh = dict_cur.fetchone()
-                session.clear()
-                session['user_id'] = sesh['id']
-                print(session['user_id'])
                 return redirect(url_for('dash'))
         return render_template('index.html')
 
