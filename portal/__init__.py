@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for, g
+from flask import Flask, render_template, request, session, redirect, url_for, g, flash
 
 import psycopg2
 import psycopg2.extras
@@ -41,6 +41,32 @@ def create_app(test_config=None):
 
     @app.route('/dashboard', methods=['GET', 'POST'])
     def dash():
+        if request.method == 'GET':
+            database = db.get_db()
+            cursor = database.cursor()
+            cursor.execute("SELECT * FROM users WHERE role = 'student';")
+            students = cursor.fetchall()
+
+            print(students)
+            return render_template('dash.html', students=students)
+
+        if request.method == 'POST':
+            database = db.get_db()
+            cursor = database.cursor()
+            id = request.form['id']
+            first_name = request.form['first_name']
+            last_name = request.form['last_name']
+
+            cursor.execute("SELECT * FROM users WHERE role = 'student';")
+            students = cursor.fetchall()
+            cursor.execute("INSERT INTO course_sessions (id, first_name, last_name) VALUES (%s, %s, %s);" (id, first_name, last_name))
+            course_roster = cursor.fetchall()
+
+
+            return render_template('dash.html', first_name=first_name, course_roster=course_roster, students=students, id=id)
+
+
+
         return render_template('dash.html')
 
     @app.route('/login', methods=['GET', 'POST'])
