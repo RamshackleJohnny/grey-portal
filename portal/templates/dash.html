@@ -3,5 +3,22 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
-<h1>HEY I DIDN'T MAKE A DASHBOARD BUT YOU'RE HERE CONGRADULATIONS</h1>
+<!-- <h1>HEY I DIDN'T MAKE A DASHBOARD BUT YOU'RE HERE CONGRATULATIONS</h1> -->
+<p>list of students</p>
+<ul>
+    {% for student_roster in students %}
+    <li>{{ student_roster[1] }}</li>
+    {% endfor %}
+</ul>
+
+<form method="POST">
+    <label for="add_student">
+        <input type="text" value" {{ add_student }} " name="add_student">
+        <label for="submit">
+            <input type="submit" name="submit">
+        </label>
+    </label>
+</form>
+
+
 {% endblock %}
