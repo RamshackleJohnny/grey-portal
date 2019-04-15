@@ -6,10 +6,11 @@
 
     {% block head %}
     <title>{% block title %}{% endblock %}</title>
-    
+
     <link rel="stylesheet" href="https://necolas.github.io/normalize.css/latest/normalize.css" type="text/css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Crimson+Text|Lato:400,400i,700" />
     <link rel="stylesheet" href="static/styles.css" type="text/css" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     {% endblock %}
   </head>
   <body>
@@ -22,7 +23,7 @@
     </main>
 
     <footer>
-      <h2>Thaddeus Stevens College of Technology</h2> 
+      <h2>Thaddeus Stevens College of Technology</h2>
       <address>
         <p>750 E King St</p>
         <p>Lancaster, PA 17602</p>
