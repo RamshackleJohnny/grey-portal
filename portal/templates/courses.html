@@ -1,0 +1,21 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <p class="flashes">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+  <form method="POST">
+    Course Name: <input type="text" name="coursename" required><br />
+    Course Description: <textarea name="coursedesc" required cols="35" maxlength="100"></textarea><br />
+    Credits: <input type="number" name="coursecreds" min="1" max="4">
+    <label for="submit">
+        <input type="submit" name="submit">
+    </label>
+  </form>
+{% endblock %}
