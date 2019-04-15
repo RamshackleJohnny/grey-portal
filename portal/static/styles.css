@@ -1,6 +1,7 @@
 /**
  * Global Defaults and Typography
  */
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:400,700,900');
 *,
 *:before,
 *:after {
@@ -8,13 +9,15 @@
 }
 
 html {
-  font-family: 'Lato', Helvetica, Arial, sans-serif;
+  font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+  font-weight: 400;
   font-size: 18px;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Crimson Text', serif;
-  font-weight: 400;
+  font-family: 'Roboto', serif;
+  font-weight: 700;
+  color: #8b1e41;
 }
 
 
@@ -27,9 +30,15 @@ body {
   flex-direction: column;
   min-height: 100vh;
   padding: 1rem;
-  background-color: rgb(128, 40, 65)
+  background-color: #CFCFCF
 }
-
+a{
+  color: #8b1e41;
+  transition: color .5s;
+}
+a:hover{
+  color: #cf8b2a;
+}
 @media (min-width: 760px) {
   footer {
     display: flex;
@@ -50,6 +59,7 @@ form {
   margin: 0 auto;
   padding: 1rem;
   width: 35vw;
+  background: #DFDFDF;
 }
 
 label {
@@ -59,4 +69,14 @@ label {
 
 label input {
   width: 100%;
+}
+
+/* Dashboard Stuff */
+
+.dashboard-wrapper{
+  border: 1px solid black;
+  padding: 1rem;
+  margin: 0 auto;
+  width: 50vw;
+  background: #DFDFDF
 }
