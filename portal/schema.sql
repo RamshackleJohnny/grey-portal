@@ -33,8 +33,8 @@ CREATE TABLE course_sessions (
 
 
 CREATE TABLE user_sessions (
-    student_id smallint,
-    session_id smallint
+    student_id smallint REFERENCES users(id),
+    session_id smallint REFERENCES course_sessions(id)
 );
 
 INSERT INTO users(email, password, role, first_name, last_name) VALUES ('dev@dev.com', 'qwerty', 'teacher', 'John', 'Cena'),('student@student.com', 'student12345', 'student', 'Morty', 'Smith')

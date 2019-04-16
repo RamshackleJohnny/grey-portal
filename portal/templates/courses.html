@@ -10,12 +10,31 @@
     {% endfor %}
   {% endif %}
 {% endwith %}
-  <form method="POST">
-    Course Name: <input type="text" name="coursename" required><br />
-    Course Code: <input type="text" name="coursenumber" required><br />
-    Course Description: <textarea name="coursedesc" required cols="35" maxlength="100"></textarea><br />
-    <label for="submit">
-        <input type="submit" name="submit">
-    </label>
-  </form>
+  <section class="flexbox">
+    {% if users_role[0]=='teacher' %}
+    <div class="bordered">
+    <form method="POST">
+      Course Name: <input type="text" name="coursename" required><br />
+      Course Code: <input type="text" name="coursenumber" required><br />
+      Course Description: <textarea name="coursedesc" required cols="35" maxlength="100"></textarea><br />
+      <label for="submit">
+          <input type="submit" name="submit">
+      </label>
+    </form>
+  </div>
+  {% endif %}
+  <div class="bordered" style="width: 600px; max-height:400px; overflow-y:scroll;">
+    <h2>Course Directory</h2>
+      {% for class in all_courses %}
+        <h3>{{ class[0] }}</h3>
+        Teacher: {% for people in all_teachers  %}
+                  {% if class[2] == people[2] %}
+                      {{ people [1] }}, {{ people[0] }}
+                  {% endif %}
+                {% endfor %}<br />
+        <i>{{ class[1] }}</i>
+        <hr />
+      {% endfor %}
+  </div>
+  </section>
 {% endblock %}

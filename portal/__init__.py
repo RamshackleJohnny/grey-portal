@@ -31,7 +31,7 @@ def create_app(test_config=None):
             return view(**kwargs)
 
         return wrapped_view
-        
+
     @app.before_request
     def before_request():
         user_id = session.get('user_id')
@@ -97,29 +97,38 @@ def create_app(test_config=None):
     @app.route('/courses', methods=['GET', 'POST'])
     @login_required
     def course_page():
+        # Lets grab the users role via session ID here.
+        connection = db.get_db()
+        cursor = connection.cursor()
+        user_id = session.get('user_id')
+        cursor.execute("SELECT role, id FROM users WHERE id = %s", [user_id])
+        users_role = cursor.fetchone()
+        print(f"users_role: {users_role}")
         if request.method== 'POST':
-            connection= db.get_db()
-            cursor = connection.cursor()
             print("Let's do this again.")
             course_name=request.form['coursename']
             course_desc=request.form['coursedesc']
             course_num=request.form['coursenumber']
             try:
-<<<<<<< HEAD
                 cursor.execute("INSERT INTO courses (name, description, credits, teacher) VALUES (%s, %s, %s, %s)", (course_name, course_desc, course_creds, g.user[0]))
-=======
-                user_id = session.get('user_id')
-                cursor.execute("INSERT INTO courses (course_name, description, teacher_id, course_number) VALUES (%s, %s, %s, %s)", (course_name, course_desc, user_id, course_num))
->>>>>>> Fixed db. Added default users. Will update README.
                 connection.commit()
                 flash(f"Your course, \"{course_name}\", was added with you as the teacher. You may now add students to this course and add sessions.")
             except Exception as e:
                 flash("We could not add this course. A course with that name may already exist.")
                 print(e)
             finally:
-                return render_template('courses.html')
+                cursor.execute("SELECT course_name, description, teacher_id FROM courses ORDER BY course_name ASC")
+                all_courses= cursor.fetchall()
+                cursor.execute("SELECT first_name, last_name, id FROM users WHERE role='teacher'")
+                all_teachers = cursor.fetchall()
+                return render_template('courses.html', all_courses=all_courses, all_teachers=all_teachers, users_role=users_role)
         else:
-            return render_template('courses.html')
+            # THIS IS GET
+            cursor.execute("SELECT course_name, description, teacher_id FROM courses ORDER BY course_name ASC")
+            all_courses = cursor.fetchall()
+            cursor.execute("SELECT first_name, last_name, id  FROM users WHERE role='teacher'")
+            all_teachers = cursor.fetchall()
+            return render_template('courses.html', all_courses=all_courses, all_teachers=all_teachers, users_role=users_role)
 
     @app.route('/logout')
     def log_out():
