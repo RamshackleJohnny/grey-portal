@@ -125,6 +125,7 @@ def create_app(test_config=None):
                 return render_template('courses.html', all_courses=all_courses, all_teachers=all_teachers, users_role=users_role)
         else:
             # THIS IS GET
+            # Ugh. -Danny.
             cursor.execute("SELECT course_name, description, teacher_id FROM courses ORDER BY course_name ASC")
             all_courses = cursor.fetchall()
             cursor.execute("SELECT first_name, last_name, id  FROM users WHERE role='teacher'")
