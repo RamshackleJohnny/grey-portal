@@ -19,7 +19,7 @@ CREATE TABLE courses (
     course_number text NOT NULL,
     course_name text NOT NULL,
     description text NOT NULL,
-    teacher_id bigint NOT NULL REFERENCES users(id)
+    teacher_id bigserial NOT NULL REFERENCES users(id)
 );
 
 -- Students prevented from making session python-side

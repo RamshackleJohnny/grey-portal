@@ -142,7 +142,8 @@ def create_app(test_config=None):
         # Lets grab the users role via session ID here.
         connection = db.get_db()
         cursor = connection.cursor()
-        user_id = session.get('user_id')
+        # user_id = session.get('user_id')
+        user_id= g.user[0]
         cursor.execute("SELECT role, id FROM users WHERE id = %s", [user_id])
         users_role = cursor.fetchone()
         print(f"users_role: {users_role}")
@@ -152,7 +153,11 @@ def create_app(test_config=None):
             course_desc=request.form['coursedesc']
             course_num=request.form['coursenumber']
             try:
+<<<<<<< HEAD
                 cursor.execute("INSERT INTO courses (name, description, course_number, teacher_id) VALUES (%s, %s, %s, %s)", (course_name, course_desc, course_num, g.user[0]))
+=======
+                cursor.execute("INSERT INTO courses (course_name, description, course_number, teacher_id) VALUES (%s, %s, %s, %s)", (course_name, course_desc, course_num, g.user[0]))
+>>>>>>> courses
                 connection.commit()
                 flash(f"Your course, \"{course_name}\", was added with you as the teacher. You may now add students to this course and add sessions.")
             except Exception as e:
@@ -171,6 +176,17 @@ def create_app(test_config=None):
             cursor.execute("SELECT first_name, last_name, id  FROM users WHERE role='teacher'")
             all_teachers = cursor.fetchall()
             return render_template('courses.html', all_courses=all_courses, all_teachers=all_teachers, users_role=users_role)
+
+    # def get_course(id):
+	# 	cur.execute('SELECT course_name FROM courses WHERE course_name= %s', [course_name])
+	# 	course = cur.fetchone()
+	# 	return course
+    # @app.route('courses/<int:id>/delete', methods=('POST','GET'))
+	# def delete(id):
+	# 	get_course(id)
+	# 	cur.execute('DELETE FROM courses WHERE course_name= %s',[id])
+	# 	conn.commit()
+	# 	return redirect(url_for('index'))
 
     @app.route('/logout')
     def log_out():
