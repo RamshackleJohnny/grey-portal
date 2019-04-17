@@ -110,7 +110,7 @@ def create_app(test_config=None):
             course_desc=request.form['coursedesc']
             course_num=request.form['coursenumber']
             try:
-                cursor.execute("INSERT INTO courses (name, description, credits, teacher) VALUES (%s, %s, %s, %s)", (course_name, course_desc, course_creds, g.user[0]))
+                cursor.execute("INSERT INTO courses (name, description, course_number, teacher_id) VALUES (%s, %s, %s, %s)", (course_name, course_desc, course_num, g.user[0]))
                 connection.commit()
                 flash(f"Your course, \"{course_name}\", was added with you as the teacher. You may now add students to this course and add sessions.")
             except Exception as e:
