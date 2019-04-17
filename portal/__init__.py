@@ -24,6 +24,14 @@ def create_app(test_config=None):
     def before_request():
         user_id = session.get('user_id')
 
+        if user_id is None:
+            g.user = None
+        else:
+            log = db.get_db()
+            cursor = log.cursor()
+            cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
+            g.user = cursor.fetchone()
+
         print(request.endpoint)
         if request.endpoint != 'index' and request.endpoint != 'login':
             if user_id is None:
@@ -36,7 +44,6 @@ def create_app(test_config=None):
 
     @app.route('/', methods=['GET', 'POST'])
     def index():
-        session.clear()
         return render_template('index.html')
 
     @app.route('/dashboard', methods=['GET', 'POST'])
@@ -64,7 +71,6 @@ def create_app(test_config=None):
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
-        session.clear()
         if request.method == 'POST':
             error = None
             print('Lets get it started!')
