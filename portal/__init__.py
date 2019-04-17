@@ -1,3 +1,5 @@
+import functools
+
 from flask import Flask, render_template, request, session, redirect, url_for, g, flash
 
 import psycopg2
@@ -20,23 +22,30 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
 
+    def login_required(view):
+        @functools.wraps(view)
+        def wrapped_view(**kwargs):
+            if g.user is None:
+                return redirect(url_for('index'))
+
+            return view(**kwargs)
+
+        return wrapped_view
+        
     @app.before_request
     def before_request():
         user_id = session.get('user_id')
 
-        print(request.endpoint)
-        if request.endpoint != 'index' and request.endpoint != 'login':
-            if user_id is None:
-                return redirect(url_for('index'))
-            else:
-                print('User is authorized')
+        if user_id is None:
+            g.user = None
         else:
-            print('And they are not on index or login')
-
+            log = db.get_db()
+            cursor = log.cursor()
+            cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
+            g.user = cursor.fetchone()
 
     @app.route('/', methods=['GET', 'POST'])
     def index():
-        session.clear()
         return render_template('index.html')
 
     @app.route('/dashboard', methods=['GET', 'POST'])
@@ -64,7 +73,6 @@ def create_app(test_config=None):
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
-        session.clear()
         if request.method == 'POST':
             error = None
             print('Lets get it started!')
@@ -87,6 +95,7 @@ def create_app(test_config=None):
         return render_template('index.html')
 
     @app.route('/courses', methods=['GET', 'POST'])
+    @login_required
     def course_page():
         if request.method== 'POST':
             connection= db.get_db()
@@ -96,8 +105,7 @@ def create_app(test_config=None):
             course_desc=request.form['coursedesc']
             course_creds= request.form['coursecreds']
             try:
-                user_id = session.get('user_id')
-                cursor.execute("INSERT INTO courses (name, description, credits, teacher) VALUES (%s, %s, %s, %s)", (course_name, course_desc, course_creds, user_id))
+                cursor.execute("INSERT INTO courses (name, description, credits, teacher) VALUES (%s, %s, %s, %s)", (course_name, course_desc, course_creds, g.user[0]))
                 connection.commit()
                 flash(f"Your course, \"{course_name}\", was added with you as the teacher. You may now add students to this course and add sessions.")
             except Exception as e:
@@ -107,5 +115,10 @@ def create_app(test_config=None):
                 return render_template('courses.html')
         else:
             return render_template('courses.html')
+
+    @app.route('/logout')
+    def log_out():
+        session.clear()
+        return redirect(url_for('index'))
 
     return app
