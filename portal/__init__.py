@@ -1,3 +1,5 @@
+import functools
+
 from flask import Flask, render_template, request, session, redirect, url_for, g, flash
 
 import psycopg2
@@ -20,6 +22,16 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
 
+    def login_required(view):
+        @functools.wraps(view)
+        def wrapped_view(**kwargs):
+            if g.user is None:
+                return redirect(url_for('index'))
+
+            return view(**kwargs)
+
+        return wrapped_view
+        
     @app.before_request
     def before_request():
         user_id = session.get('user_id')
@@ -31,16 +43,6 @@ def create_app(test_config=None):
             cursor = log.cursor()
             cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
             g.user = cursor.fetchone()
-
-        print(request.endpoint)
-        if request.endpoint != 'index' and request.endpoint != 'login':
-            if user_id is None:
-                return redirect(url_for('index'))
-            else:
-                print('User is authorized')
-        else:
-            print('And they are not on index or login')
-
 
     @app.route('/', methods=['GET', 'POST'])
     def index():
@@ -93,6 +95,7 @@ def create_app(test_config=None):
         return render_template('index.html')
 
     @app.route('/courses', methods=['GET', 'POST'])
+    @login_required
     def course_page():
         if request.method== 'POST':
             connection= db.get_db()
@@ -112,5 +115,10 @@ def create_app(test_config=None):
                 return render_template('courses.html')
         else:
             return render_template('courses.html')
+
+    @app.route('/logout')
+    def log_out():
+        session.clear()
+        return redirect(url_for('index'))
 
     return app

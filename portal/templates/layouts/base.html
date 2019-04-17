@@ -16,8 +16,15 @@
   <body>
     <header>
       <h1>{{ self.title() }}</h1>
+      <nav>
+        <ul>
+          {% if g.user %}
+            <li><span>Hello {{ g.user[2] }} !</span></li>
+            <li><a href="{{ url_for('log_out') }}">Log Out</a></li>
+          {% endif %}
+        </ul>
+      </nav>
     </header>
-
     <main>
       {% block content %}{% endblock %}
     </main>
