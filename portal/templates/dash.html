@@ -3,21 +3,47 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
-<!-- <h1>HEY I DIDN'T MAKE A DASHBOARD BUT YOU'RE HERE CONGRATULATIONS</h1> -->
+
 <p>list of students</p>
 <ul>
-    {% for student_roster in students %}
-    <li>{{ student_roster[1] }}</li>
+    {% for student in students %}
+    <li>id: {{ student[0] }} {{ student[2] }} {{ student[3] }}</li>
     {% endfor %}
 </ul>
-
+<p>list of courses</p>
+<ul>
+    {% for course_lists in course_list %}
+    <li>{{ course_lists }}</li>
+    {% endfor %}
+</ul>
+<p>course sessions</p>
+<ul>
+    {% for users_sessions in user_sessions %}
+    <li>{{ users_sessions }}</li>
+    {% endfor %}
+</ul>
 <form method="POST">
-    <label for="add_student">
-        <input type="text" value" {{ add_student }} " name="add_student">
-        <label for="submit">
-            <input type="submit" name="submit">
-        </label>
+    <p>Enter the following information to create a course session</p>
+    <p>Name:</p>
+    <label for="courses_name">
+        <input type="text" name="courses_name" value="{{ courses_name }}">
     </label>
+    <p>Course Number:</p>
+    <label for="course_session_number">
+        <input type="text" name="course_session_number">
+    </label>
+    <p>Session Time:</p>
+    <label for="session_time">
+        <input type="text" name="session_time">
+    </label>
+    <p>Session ID:</p>
+    <label for="course_session_id">
+        <input type="text" name="course_session_id">
+    </label>
+    <label for="submit">
+        <input type="submit" name="submit">
+    </label>
+
 </form>
 
 

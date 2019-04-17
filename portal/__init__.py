@@ -51,23 +51,65 @@ def create_app(test_config=None):
     @app.route('/dashboard', methods=['GET', 'POST'])
     def dash():
         if request.method == 'GET':
+            # List all the students in the database
             database = db.get_db()
             cursor = database.cursor()
             cursor.execute("SELECT * FROM users WHERE role = 'student';")
             students = cursor.fetchall()
 
-            print(students)
-            return render_template('dash.html', students=students)
+            # List all courses in the database
+            course_db = db.get_db()
+            course_cursor = course_db.cursor()
+            course_cursor.execute("SELECT * FROM courses;")
+            course_list = course_cursor.fetchall()
+            print(course_list)
+
+            # List sessions in the database
+            session_db = db.get_db()
+            session_cursor = session_db.cursor()
+            session_cursor.execute("SELECT * FROM course_sessions;")
+            session_list = session_cursor.fetchall()
+            print(session_list)
+
+            # List user sessions in the database
+            # user_sessions_db = db.get_db()
+            # user_sessions = user_sessions_db.cursor()
+            # user_sessions.execute("SELECT * FROM user_sessions;")
+            # user_sessions = user_sessions.fetchall()
+            # REMEMBER TO PUT user_sessions IN render_template AFTER UNCOMMENTING
+
+
+            return render_template('dash.html', students=students, course_list=course_list, session_list=session_list)
 
         if request.method == 'POST':
-            database = db.get_db()
-            cursor = database.cursor()
-            add_student = request.form['add_student']
-            # remove_student = request.form['remove_student']
-            cursor.execute("SELECT (id, email) FROM users WHERE role = 'student' AND email = %s;", (add_student,))
-            # cursor.execute("SELECT (id, %s) FROM users WHERE role = 'student';", (remove_student))
-            return render_template('dash.html', add_student=add_student)
 
+            # DB connection
+            database = db.get_db()
+            course_session_cursor = database.cursor()
+            courses_cursor = database.cursor()
+
+            
+            # Info from form field
+            courses_name = request.method['course_name']
+            course_session_number = request.method['course_session_number']
+            course_session_id = request.method.get('course_session_id', type=int)
+            session_time = request.method['session_time']
+            session_students = request.method['session_students']
+            
+            # Executions and Fetch for course_session_cursor
+            courses_cursor.execute("SELECT course_name FROM courses;")
+            course_name = courses_cursor.fetchone()
+
+            course_session_cursor.execute("SELECT * FROM courses;")
+            
+
+            # Insert session info into database
+            course_session_cursor.execute("INSERT INTO course_sessions (course_number, course_id, time) VALUES (%s, %s, %s);", (course_session_number, course_name, session_time,))
+            course_session_cursor.commit()
+            
+
+            
+            return render_template('dash.html', course_name=course_name, course_session_id=course_session_id, session_time=session_time, session_students=session_students, courses_name=courses_name, course_session_number=course_session_number)
 
         return render_template('dash.html')
 
