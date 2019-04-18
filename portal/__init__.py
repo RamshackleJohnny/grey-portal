@@ -118,7 +118,7 @@ def create_app(test_config=None):
                 flash("We could not add this course. A course with that name may already exist.")
                 print(e)
             finally:
-                cursor.execute("SELECT course_name, description, teacher_id FROM courses ORDER BY course_name ASC")
+                cursor.execute("SELECT course_name, description, teacher_id, course_id FROM courses ORDER BY course_name ASC")
                 all_courses= cursor.fetchall()
                 cursor.execute("SELECT first_name, last_name, id FROM users WHERE role='teacher'")
                 all_teachers = cursor.fetchall()
@@ -126,22 +126,41 @@ def create_app(test_config=None):
         else:
             # THIS IS GET
             # Ugh. -Danny.
-            cursor.execute("SELECT course_name, description, teacher_id FROM courses ORDER BY course_name ASC")
+            cursor.execute("SELECT course_name, description, teacher_id, course_id FROM courses ORDER BY course_name ASC")
             all_courses = cursor.fetchall()
             cursor.execute("SELECT first_name, last_name, id  FROM users WHERE role='teacher'")
             all_teachers = cursor.fetchall()
             return render_template('courses.html', all_courses=all_courses, all_teachers=all_teachers, users_role=users_role)
 
-    # def get_course(id):
-	# 	cur.execute('SELECT course_name FROM courses WHERE course_name= %s', [course_name])
-	# 	course = cur.fetchone()
-	# 	return course
-    # @app.route('courses/<int:id>/delete', methods=('POST','GET'))
-	# def delete(id):
-	# 	get_course(id)
-	# 	cur.execute('DELETE FROM courses WHERE course_name= %s',[id])
-	# 	conn.commit()
-	# 	return redirect(url_for('index'))
+    def get_course(id):
+        connection = db.get_db()
+        cursor = connection.cursor()
+        cursor.execute('SELECT course_id, course_name, description, course_number FROM courses WHERE course_id= %s', [id])
+        course = cursor.fetchone()
+        return course
+
+    @app.route('/<id>/course-delete', methods=('POST','GET'))
+    def delete_course(id):
+        get_course(id)
+        connection = db.get_db()
+        cursor = connection.cursor()
+        cursor.execute('DELETE FROM courses WHERE course_id= %s',[id])
+        connection.commit()
+        return redirect(url_for('course_page'))
+
+    @app.route('/<id>/course-update', methods=['GET', 'POST'])
+    def update_course(id):
+        course = get_course(id)
+        if request.method== 'POST':
+            new_name= request.form['course-name']
+            new_desc= request.form['course-desc']
+            new_num= request.form['course-num']
+            connection = db.get_db()
+            cursor = connection.cursor()
+            cursor.execute("UPDATE courses SET course_name=%s, description=%s, course_number=%s WHERE course_id= %s", [new_name, new_desc, new_num, id])
+            connection.commit()
+            return redirect(url_for('course_page'))
+        return render_template('update-course.html', course=course)
 
     @app.route('/logout')
     def log_out():

@@ -11,7 +11,7 @@
   {% endif %}
 {% endwith %}
   <section class="flexbox">
-    {% if users_role[0]=='teacher' %}
+    {% if g.user[5]=='teacher' %}
     <div class="bordered">
     <form method="POST">
       Course Name: <input type="text" name="coursename" required><br />
@@ -33,6 +33,9 @@
                   {% endif %}
                 {% endfor %}<br />
         <i>{{ class[1] }}</i>
+        {% if class[2] == g.user[0] %}<br />
+            <a class="fa fa-trash" href="{{ url_for('delete_course', id=class[3]) }}"></a> <a class="fa fa-pencil-square-o" href="{{ url_for('update_course', id=class[3]) }}"></a>
+          {% endif %}
         <hr />
       {% endfor %}
   </div>
