@@ -18,10 +18,17 @@
 </ul>
 <p>course sessions</p>
 <ul>
-    {% for sessions in cour %}
-    <li>{{ sessions }}</li>
+    {% for course_lists in course_list %}
+    <li>{{ course_lists }}</li>
+    <ul>
+            {% for sessions in session_list %}
+            <li>{{ sessions }}</li>
+            {% endfor %}
+        </ul>
     {% endfor %}
+
 </ul>
+   
 <!-- <form method="GET">
     <fieldset>
         <label>Select session</label>
