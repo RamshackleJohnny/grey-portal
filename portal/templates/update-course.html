@@ -1,0 +1,17 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="newcourse">Course Name</label>
+    <input name="course-name" id="course-name"
+      value="{{ course[1] }}" required>
+      <label for="newcourse">Course Number</label>
+      <input name="course-num" id="course-name"
+        value="{{ course[3] }}" required>
+    <label for="newdescription">Course Description</label>
+    <textarea name="course-desc" id="course-desc">{{ course[2] }}</textarea>
+    <input type="submit" value="Save">
+  </form>
+{% endblock %}
