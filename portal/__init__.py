@@ -88,24 +88,24 @@ def create_app(test_config=None):
             course_session_cursor = database.cursor()
             courses_cursor = database.cursor()
 
-            
+
             # Info from form field
             courses_name = request.form['courses_name']
             course_session_number = request.form['course_session_number']
             course_session_id = request.form.get('course_session_id', type=int)
             session_time = request.form['session_time']
-            # number_students = request.form['number_students']
-            
+            number_students = request.form['number_students']
+
             # Executions and Fetch for course_session_cursor
             courses_cursor.execute("SELECT * FROM courses WHERE course_name = %s ;", (courses_name,))
             cour = courses_cursor.fetchone()
             print(cour[0])
 
             # Insert session info into database
-            course_session_cursor.execute("INSERT INTO course_sessions (number, course_id, time) VALUES (%s,%s,%s);", (course_session_number, course_session_id, session_time))
+            course_session_cursor.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour[0], number_students, session_time))
             database.commit()
-            
-            return render_template('dash.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour)
+
+            return render_template('dash.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students)
         return render_template('dash.html')
 
     @app.route('/login', methods=['GET', 'POST'])

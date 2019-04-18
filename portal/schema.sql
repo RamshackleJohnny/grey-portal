@@ -27,8 +27,9 @@ CREATE TABLE courses (
 CREATE TABLE course_sessions (
     id bigserial PRIMARY KEY,
     number varchar(4),
-    course_id bigint UNIQUE REFERENCES courses(course_id) NOT NULL,
-    time text NOT NULL
+    course_id bigint REFERENCES courses(course_id) NOT NULL,
+    time text NOT NULL,
+    number_students int NOT NULL
 );
 
 
