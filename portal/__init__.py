@@ -206,7 +206,7 @@ def create_app(test_config=None):
 
     @app.route('/assignments', methods=['GET', 'POST'])
     def assignment_page():
-        return f"Hello World"
+        return render_template('assignments.html')
 
 
     @app.route('/logout')
