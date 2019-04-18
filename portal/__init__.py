@@ -52,7 +52,7 @@ def create_app(test_config=None):
     def dash():
 
         return render_template('dash.html')
-        
+
     @app.route('/sessions', methods=['GET', 'POST'])
     def sessions():
         if request.method == 'GET':
@@ -84,7 +84,7 @@ def create_app(test_config=None):
             # REMEMBER TO PUT user_sessions IN render_template AFTER UNCOMMENTING
 
 
-            return render_template('dash.html', students=students, course_list=course_list, session_list=session_list)
+            return render_template('sessions.html', students=students, course_list=course_list, session_list=session_list)
 
         if request.method == 'POST':
 
@@ -110,8 +110,8 @@ def create_app(test_config=None):
             course_session_cursor.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour[0], number_students, session_time))
             database.commit()
 
-            return render_template('dash.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students)
-        return render_template('dash.html')
+            return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students)
+        return render_template('sessions.html')
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -203,6 +203,11 @@ def create_app(test_config=None):
             connection.commit()
             return redirect(url_for('course_page'))
         return render_template('update-course.html', course=course)
+
+    @app.route('/assignments', methods=['GET', 'POST'])
+    def assignment_page():
+        return f"Hello World"
+
 
     @app.route('/logout')
     def log_out():
