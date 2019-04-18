@@ -32,7 +32,6 @@ CREATE TABLE course_sessions (
     number_students int NOT NULL
 );
 
-
 CREATE TABLE user_sessions (
     student_id smallint REFERENCES users(id),
     session_id smallint REFERENCES course_sessions(id)
@@ -44,12 +43,9 @@ CREATE TABLE assignments (
     assignment_id bigserial UNIQUE PRIMARY KEY,
     points_available int NOT NULL,
     points_earned int NOT NULL,
-    -- due_date TIMESTAMP,
-    completed BOOLEAN
-    student_id  bigserial PRIMARY KEY,
-    course_name TEXT NOT NULL,
-    FOREIGN KEY course_name REFERENCES sessions(session_id),
-    FOREIGN KEY student_id REFERENCES users(id)
+    completed BOOLEAN,
+    session_name REFERENCES user_sessions(session_id),
+    student_id int REFERENCES users(id)
 );
 
 INSERT INTO users(email, password, role, first_name, last_name) VALUES ('dev@dev.com', 'qwerty', 'teacher', 'John', 'Cena'),('student@student.com', 'student12345', 'student', 'Morty', 'Smith')
