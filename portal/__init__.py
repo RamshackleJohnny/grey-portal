@@ -50,6 +50,11 @@ def create_app(test_config=None):
 
     @app.route('/dashboard', methods=['GET', 'POST'])
     def dash():
+
+        return render_template('dash.html')
+        
+    @app.route('/sessions', methods=['GET', 'POST'])
+    def sessions():
         if request.method == 'GET':
             # List all the students in the database
             database = db.get_db()
