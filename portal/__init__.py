@@ -206,6 +206,17 @@ def create_app(test_config=None):
 
     @app.route('/assignments', methods=['GET', 'POST'])
     def assignment_page():
+        if request.method== 'POST':
+            assign_name = request.form['assign-name']
+            points_ttl = request.form['points-avb']
+            instructions = request.form['instructions']
+            # done = request.form['done']
+            session = request.form['session']
+            connection = db.get_db()
+            cursor = connection.cursor()
+            cursor.execute("INSERT INTO assignments (assignment_name, points_available, instructions, completed, session_name) VALUES (%s,%s,%s,%s,%s);", (assign_name, points_ttl, instructions, False,session ))
+            connection.commit()
+            return redirect(url_for('assignment_page'))
         return render_template('assignments.html')
 
 

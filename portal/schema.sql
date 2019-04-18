@@ -43,7 +43,6 @@ CREATE TABLE assignments (
     assignment_id bigserial UNIQUE PRIMARY KEY,
     assignment_name text NOT NULL,
     points_available int NOT NULL,
-    points_earned int NOT NULL,
     instructions text NOT NULL,
     completed BOOLEAN,
     session_name int REFERENCES course_sessions(id),

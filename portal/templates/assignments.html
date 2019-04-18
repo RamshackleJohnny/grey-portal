@@ -4,5 +4,16 @@
 
 {% block content %}
 
+<form method='POST'>
+  Assignment name: <input type="text" name="assign-name" required><br />
+  Points Available: <input type="number" name="points-avb"><br />
+  Instructions: <textarea name="instructions" required cols="35"></textarea> <br />
+  Session: <select name="session">
+      <option value="1">1</option>
+  </select>
+  <label for="submit">
+      <input type="submit" name="submit">
+  </label>
+</form>
 
 {% endblock %}
