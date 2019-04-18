@@ -63,3 +63,12 @@ If you want to run tests, you'll have to create a second database according to t
 ```
 
 The first command will run the test functions defined in the `tests/` directory. The second gives a more detailed output. Run the third command to generate a report of the code covered by the tests. You can view this report in the terminal with `coverage report` or with more detail in the browser with `coverage html`.
+
+
+## Adding Courses
+
+Navigate to `http://127.0.0.1/courses` and add a course if you're logged in as a teacher. If you created the course, only you can edit and delete the course. Click the trash can that appears to delete the course, or the pencil icon to edit it.
+
+## Adding Users
+
+After exporting `FLASK_APP=portal`, type `flask add-user` in the terminal to add users to the database. There will be a prompt to walk you through adding a new user to the userbase.
