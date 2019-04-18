@@ -18,28 +18,43 @@
 </ul>
 <p>course sessions</p>
 <ul>
-    {% for users_sessions in user_sessions %}
-    <li>{{ users_sessions }}</li>
+    {% for sessions in cour %}
+    <li>{{ sessions }}</li>
     {% endfor %}
 </ul>
+<!-- <form method="GET">
+    <fieldset>
+        <label>Select session</label>
+        <select>
+            {% for courses in cour %}
+            <option value = "{{ courses }}">{{ courses }}</option>
+            {% endfor %}
+        </select>
+    </fieldset>
+</form> -->
 <form method="POST">
     <p>Enter the following information to create a course session</p>
-    <p>Name:</p>
+    <p>Course Name:</p>
     <label for="courses_name">
         <input type="text" name="courses_name">
     </label>
+    
     <p>Course Number:</p>
     <label for="course_session_number">
         <input type="text" name="course_session_number">
+    </label>
+    <p>Session ID:</p>
+    <label for="course_session_id">
+        <input type="text" name="course_session_id">
     </label>
     <p>Session Time:</p>
     <label for="session_time">
         <input type="text" name="session_time">
     </label>
-    <p>Number of students:</p>
+    <!-- <p>Number of students:</p>
     <label for="number_students">
         <input type="number" name="number_students">
-    </label>
+    </label> -->
     <label for="submit">
         <input type="submit" name="submit">
     </label>
