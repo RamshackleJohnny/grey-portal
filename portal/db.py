@@ -43,7 +43,9 @@ def add_user():
     user_email = input("User Email: ")
     user_password = input("User Password: ")
     user_role= input("User Role (student/teacher): ")
-    cur.execute("INSERT INTO users (email, password, role) VALUES(%s, %s, %s)", (user_email, user_password, user_role))
+    user_first = input("First Name: ")
+    user_last = input("Last Name: ")
+    cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
     db.commit()
     cur.close()
 

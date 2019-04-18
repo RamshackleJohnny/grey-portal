@@ -31,7 +31,7 @@ def create_app(test_config=None):
             return view(**kwargs)
 
         return wrapped_view
-        
+
     @app.before_request
     def before_request():
         user_id = session.get('user_id')
@@ -97,24 +97,70 @@ def create_app(test_config=None):
     @app.route('/courses', methods=['GET', 'POST'])
     @login_required
     def course_page():
+        # Lets grab the users role via session ID here.
+        connection = db.get_db()
+        cursor = connection.cursor()
+        # user_id = session.get('user_id')
+        user_id= g.user[0]
+        cursor.execute("SELECT role, id FROM users WHERE id = %s", [user_id])
+        users_role = cursor.fetchone()
+        print(f"users_role: {users_role}")
         if request.method== 'POST':
-            connection= db.get_db()
-            cursor = connection.cursor()
             print("Let's do this again.")
             course_name=request.form['coursename']
             course_desc=request.form['coursedesc']
-            course_creds= request.form['coursecreds']
+            course_num=request.form['coursenumber']
             try:
-                cursor.execute("INSERT INTO courses (name, description, credits, teacher) VALUES (%s, %s, %s, %s)", (course_name, course_desc, course_creds, g.user[0]))
+                cursor.execute("INSERT INTO courses (course_name, description, course_number, teacher_id) VALUES (%s, %s, %s, %s)", (course_name, course_desc, course_num, g.user[0]))
                 connection.commit()
                 flash(f"Your course, \"{course_name}\", was added with you as the teacher. You may now add students to this course and add sessions.")
             except Exception as e:
                 flash("We could not add this course. A course with that name may already exist.")
                 print(e)
             finally:
-                return render_template('courses.html')
+                cursor.execute("SELECT course_name, description, teacher_id, course_id FROM courses ORDER BY course_name ASC")
+                all_courses= cursor.fetchall()
+                cursor.execute("SELECT first_name, last_name, id FROM users WHERE role='teacher'")
+                all_teachers = cursor.fetchall()
+                return render_template('courses.html', all_courses=all_courses, all_teachers=all_teachers, users_role=users_role)
         else:
-            return render_template('courses.html')
+            # THIS IS GET
+            # Ugh. -Danny.
+            cursor.execute("SELECT course_name, description, teacher_id, course_id FROM courses ORDER BY course_name ASC")
+            all_courses = cursor.fetchall()
+            cursor.execute("SELECT first_name, last_name, id  FROM users WHERE role='teacher'")
+            all_teachers = cursor.fetchall()
+            return render_template('courses.html', all_courses=all_courses, all_teachers=all_teachers, users_role=users_role)
+
+    def get_course(id):
+        connection = db.get_db()
+        cursor = connection.cursor()
+        cursor.execute('SELECT course_id, course_name, description, course_number FROM courses WHERE course_id= %s', [id])
+        course = cursor.fetchone()
+        return course
+
+    @app.route('/<id>/course-delete', methods=('POST','GET'))
+    def delete_course(id):
+        get_course(id)
+        connection = db.get_db()
+        cursor = connection.cursor()
+        cursor.execute('DELETE FROM courses WHERE course_id= %s',[id])
+        connection.commit()
+        return redirect(url_for('course_page'))
+
+    @app.route('/<id>/course-update', methods=['GET', 'POST'])
+    def update_course(id):
+        course = get_course(id)
+        if request.method== 'POST':
+            new_name= request.form['course-name']
+            new_desc= request.form['course-desc']
+            new_num= request.form['course-num']
+            connection = db.get_db()
+            cursor = connection.cursor()
+            cursor.execute("UPDATE courses SET course_name=%s, description=%s, course_number=%s WHERE course_id= %s", [new_name, new_desc, new_num, id])
+            connection.commit()
+            return redirect(url_for('course_page'))
+        return render_template('update-course.html', course=course)
 
     @app.route('/logout')
     def log_out():
