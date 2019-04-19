@@ -1,10 +1,10 @@
+{% if g.user %}
 <nav>
   <ul>
-    {% if g.user %}
-      <span>Hello {{ g.user[2] }}!</span>
-    {% endif %}
+    <span>Hello, {{ g.user[2] }}!</span>
     <li><a href="{{ url_for('course_page') }}">Courses</a></li>
     <li><a href="{{ url_for('course_page') }}">Dashboard</a></li>
     <li><a href="{{ url_for('log_out') }}">Log Out</a></li>
-  </ul>  
+  </ul>
 </nav>
+{% endif %}
