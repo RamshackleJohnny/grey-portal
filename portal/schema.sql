@@ -42,6 +42,7 @@ CREATE TABLE user_sessions (
 CREATE TABLE assignments (
     assignment_id bigserial UNIQUE PRIMARY KEY,
     assignment_name text NOT NULL,
+    points_earned int,
     points_available int NOT NULL,
     instructions text NOT NULL,
     completed BOOLEAN,
@@ -49,4 +50,6 @@ CREATE TABLE assignments (
     student_id int REFERENCES users(id)
 );
 
-INSERT INTO users(email, password, role, first_name, last_name) VALUES ('dev@dev.com', 'qwerty', 'teacher', 'John', 'Cena'),('student@student.com', 'student12345', 'student', 'Morty', 'Smith')
+INSERT INTO users(email, password, role, first_name, last_name) VALUES ('dev@dev.com', 'qwerty', 'teacher', 'John', 'Cena'),('student@student.com', 'student12345', 'student', 'Morty', 'Smith');
+
+INSERT INTO courses(course_number,course_name, description, teacher_id) VALUES ('3000', 'Git', 'Learning to use Git', 1),('8675', 'Yes', 'A class on positivity and good vibes', 1);

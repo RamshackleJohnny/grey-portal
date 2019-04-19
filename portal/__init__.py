@@ -111,8 +111,11 @@ def create_app(test_config=None):
                     cur.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour[0], number_students, session_time))
                     con.commit()
 
+
+
             return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students)
-        return render_template('sessions.html')
+
+        return render_template('sessions.html', students=students, course_list=course_list, session_list=session_list, user_sessions=user_sessions)
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -224,7 +227,6 @@ def create_app(test_config=None):
             connection.commit()
             return redirect(url_for('assignment_page'))
         return render_template('assignments.html')
-
 
     @app.route('/logout')
     def log_out():
