@@ -3,11 +3,6 @@ import functools
 from flask import Flask, render_template, request, session, redirect, url_for, g, flash
 
 import psycopg2
-<<<<<<< HEAD
-import psycopg2.extras
-from psycopg2.extras import DictCursor
-=======
->>>>>>> 2e48378fcd2dda4b9d82ae268ce090b49275450f
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -68,11 +63,7 @@ def create_app(test_config=None):
                     cur.execute("SELECT * FROM users WHERE role = 'student';")
                     students = cur.fetchall()
 
-<<<<<<< HEAD
-            # List all courses in the database
-=======
             # List course name in the database
->>>>>>> 2e48378fcd2dda4b9d82ae268ce090b49275450f
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("SELECT course_name FROM courses;")
@@ -95,9 +86,6 @@ def create_app(test_config=None):
 
             # List courses with sessions
 
-<<<<<<< HEAD
-            return render_template('sessions.html', students=students, course_list=course_list, session_list=session_list)
-=======
             with db.get_db() as con:
                 with con.cursor() as cur:
                     sessions = {}
@@ -105,17 +93,13 @@ def create_app(test_config=None):
                         pass
 
                         cur.execute("SELECT * FROM course_sessions WHERE course_id = %s;", (course_list[0],))
->>>>>>> 2e48378fcd2dda4b9d82ae268ce090b49275450f
 
 
-<<<<<<< HEAD
-=======
             print(students)
             return render_template('sessions.html', students=students, course_list=course_list, session_list=session_list)
 
         if request.method == 'POST':
 
->>>>>>> 2e48378fcd2dda4b9d82ae268ce090b49275450f
 
             # Info from form field
             courses_name = request.form['courses_name']
@@ -141,11 +125,7 @@ def create_app(test_config=None):
 
             return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students)
 
-<<<<<<< HEAD
-        return render_template('sessions.html', students=students, course_list=course_list, session_list=session_list, user_sessions=user_sessions)
-=======
         return render_template('sessions.html', students=students, course_list=course_list, session_list=session_list)
->>>>>>> 2e48378fcd2dda4b9d82ae268ce090b49275450f
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -162,20 +142,12 @@ def create_app(test_config=None):
             if userdata == None:
                 return render_template('index.html', wrong=wrong)
             else:
-<<<<<<< HEAD
-                dict_cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
-                dict_cur.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email,password,))
-                sesh = dict_cur.fetchone()
-                session.clear()
-                session['user_id'] = sesh['id']
-=======
                 with db.get_db() as con:
                     with con.cursor() as cur:
                         cur.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email,password,))
                         sesh = cur.fetchone()
                         session.clear()
                         session['user_id'] = sesh['id']
->>>>>>> 2e48378fcd2dda4b9d82ae268ce090b49275450f
                 return redirect(url_for('dash'))
         return render_template('index.html')
 
