@@ -78,7 +78,9 @@ label input {
 }
 .bordered{
   border: 1px solid black;
-  padding: 10px;
+  padding: 0 10px;
+  width: 100vw;
+  /* max-width: 80vw; */
 }
 .dashboard-wrapper{
   border: 1px solid black;
@@ -86,4 +88,20 @@ label input {
   margin: 0 auto;
   width: 50vw;
   background: #DFDFDF
+}
+
+nav{
+  width: 80vw;
+  padding: 10px;
+  border: 1px solid black;
+  margin: 0 auto;
+}
+
+nav ul{
+  display: flex;
+  justify-content: space-around;
+}
+
+nav ul li{
+  display: inline-block;
 }
