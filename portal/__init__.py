@@ -57,6 +57,7 @@ def create_app(test_config=None):
 
     @app.route('/sessions', methods=['GET', 'POST'])
     def sessions():
+<<<<<<< HEAD
         if request.method == 'GET':
             # List all the students in the database
             with db.get_db() as con:
@@ -87,6 +88,36 @@ def create_app(test_config=None):
 
 
             return render_template('sessions.html', students=students, course_list=course_list, session_list=session_list)
+=======
+        # List all the students in the database
+        database = db.get_db()
+        cursor = database.cursor()
+        cursor.execute("SELECT * FROM users WHERE role = 'student';")
+        students = cursor.fetchall()
+
+        # List all courses in the database
+        course_db = db.get_db()
+        course_cursor = course_db.cursor()
+        course_cursor.execute("SELECT course_name FROM courses;")
+        course_list = course_cursor.fetchall()
+        print(course_list)
+
+        # List sessions in the database
+        session_db = db.get_db()
+        session_cursor = session_db.cursor()
+        session_cursor.execute("SELECT * FROM course_sessions;")
+        session_list = session_cursor.fetchall()
+        print(session_list)
+
+        # List user sessions in the database
+        user_sessions_db = db.get_db()
+        user_sessions = user_sessions_db.cursor()
+        user_sessions.execute("SELECT * FROM user_sessions;")
+        user_sessions = user_sessions.fetchall()
+
+        # session_cursor.execute("SELECT * FROM course_sessions;")
+        # course_session_info = session_cursor.fetchall()
+>>>>>>> d7d8425fbe6cac75f2ec5f7b4990a75fe2c3960f
 
         if request.method == 'POST':
 
@@ -111,8 +142,16 @@ def create_app(test_config=None):
                     cur.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour[0], number_students, session_time))
                     con.commit()
 
+<<<<<<< HEAD
             return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students)
         return render_template('sessions.html')
+=======
+            
+
+            return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students)
+        
+        return render_template('sessions.html', students=students, course_list=course_list, session_list=session_list, user_sessions=user_sessions)
+>>>>>>> d7d8425fbe6cac75f2ec5f7b4990a75fe2c3960f
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
