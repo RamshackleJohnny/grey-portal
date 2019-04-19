@@ -3,7 +3,7 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
-
+{% if g.user[5]=='teacher' %}
 <form method='POST'>
   Assignment name: <input type="text" name="assign-name" required><br />
   Points Available: <input type="number" name="points-avb"><br />
@@ -15,5 +15,22 @@
       <input type="submit" name="submit">
   </label>
 </form>
-
+{% endif %}
+<div class="bordered" style="width: 600px; max-height:400px; overflow-y:scroll;">
+  <h2>Assignments:</h2>
+    {% for items in all_assignments %}
+      <h3>{{ items[0] }}</h3>
+      <!-- Teacher: {% for people in all_teachers  %} -->
+                <!-- {% if item[2] == people[2] %} -->
+                    <!-- {{ people [1] }}, {{ people[0] }} -->
+                <!-- {% endif %} -->
+              <!-- {% endfor %}<br /> -->
+      <i>{{ items[1] }}/{{ items[2] }}</i>
+      <p>{{ items[3] }}</p>
+      {% if g.user[5]=='teacher' %}<br />
+          <a class="fa fa-trash" href="{{ url_for('delete_assignment', id=items[-1]) }}"></a> <a class="fa fa-pencil-square-o" href="{{ url_for('delete_assignment', id=items[-1]) }}"></a>
+        {% endif %}
+      <hr />
+    {% endfor %}
+</div>
 {% endblock %}
