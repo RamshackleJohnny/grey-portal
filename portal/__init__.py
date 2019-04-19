@@ -3,8 +3,6 @@ import functools
 from flask import Flask, render_template, request, session, redirect, url_for, g, flash
 
 import psycopg2
-import psycopg2.extras
-from psycopg2.extras import DictCursor
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -123,10 +121,10 @@ def create_app(test_config=None):
                     cur.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour[0], number_students, session_time))
                     con.commit()
 
-            
+
 
             return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students)
-        
+
         return render_template('sessions.html', students=students, course_list=course_list, session_list=session_list)
 
     @app.route('/login', methods=['GET', 'POST'])
@@ -144,11 +142,12 @@ def create_app(test_config=None):
             if userdata == None:
                 return render_template('index.html', wrong=wrong)
             else:
-                dict_cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
-                dict_cur.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email,password,))
-                sesh = dict_cur.fetchone()
-                session.clear()
-                session['user_id'] = sesh['id']
+                with db.get_db() as con:
+                    with con.cursor() as cur:
+                        cur.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email,password,))
+                        sesh = cur.fetchone()
+                        session.clear()
+                        session['user_id'] = sesh['id']
                 return redirect(url_for('dash'))
         return render_template('index.html')
 
