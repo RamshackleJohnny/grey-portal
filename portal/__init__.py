@@ -63,19 +63,30 @@ def create_app(test_config=None):
                     cur.execute("SELECT * FROM users WHERE role = 'student';")
                     students = cur.fetchall()
 
-            # List course name in the database
+            # List course name from the database
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("SELECT course_name FROM courses;")
+                    course_name = cur.fetchall()
+
+            # List course ID from the database
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("SELECT course_id FROM courses;")
                     course_list = cur.fetchall()
-                    print(course_list)
+                    print(f"this is the course list: {course_list}")
+            
+            # List course sessions ID from the database
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("SELECT * FROM course_sessions WHERE course_id = %s;", (course_list,))
+                  
+
 
             # List sessions in the database
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("SELECT * FROM course_sessions;")
-                    session_list = cur.fetchall()
-                    print(session_list)
 
             # List user sessions in the database
             # with db.get_db() as con:
@@ -86,17 +97,14 @@ def create_app(test_config=None):
 
             # List courses with sessions
 
-            with db.get_db() as con:
-                with con.cursor() as cur:
-                    sessions = {}
-                    for courses in course_list:
-                        pass
-
-                        cur.execute("SELECT * FROM course_sessions WHERE course_id = %s;", (course_list[0],))
+            # with db.get_db() as con:
+            #     with con.cursor() as cur:
+            #         sessions = {}
+            #         cur.execute("SELECT * FROM course_sessions WHERE course_id = %s;", (course_list,))
 
 
             print(students)
-            return render_template('sessions.html', students=students, course_list=course_list, session_list=session_list)
+            return render_template('sessions.html', students=students, course_list=course_list, course_name=course_name)
 
         if request.method == 'POST':
 
@@ -125,7 +133,7 @@ def create_app(test_config=None):
 
             return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students)
 
-        return render_template('sessions.html', students=students, course_list=course_list, session_list=session_list)
+        return render_template('sessions.html', students=students, course_list=course_list)
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
