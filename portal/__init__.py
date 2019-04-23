@@ -201,8 +201,9 @@ def create_app(test_config=None):
         get_course(id)
         with db.get_db() as con:
             with con.cursor() as cur:
-                cur.execute('DELETE FROM courses WHERE course_id= %s;',[id,])
                 cur.execute('DELETE FROM course_sessions WHERE course_id= %s;',[id,])
+                cur.execute('DELETE FROM courses WHERE course_id= %s;',[id,])
+
                 con.commit()
         return redirect(url_for('course_page'))
 
