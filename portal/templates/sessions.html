@@ -14,10 +14,13 @@
 <ul>
     {% for course_lists in course_name %}
     <li>{{ course_lists }}</li>
+    <br>
     <p>Course sessions</p>
+    <br>
     <ul>
-        <li>{{ thelist[0] }}</li>
+        <li>{{ thelist[course_lists[1] - 1] }}</li>
     </ul>
+    <br>
     {% endfor %}
 </ul>
 
