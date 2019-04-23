@@ -68,15 +68,20 @@ def create_app(test_config=None):
                 with con.cursor() as cur:
                     cur.execute("SELECT course_name FROM courses;")
                     course_name = cur.fetchall()
+                    cur.execute("SELECT course_id FROM courses;")
+                    course_id = cur.fetchall()
+                    print(course_id)
+
 
             # List course ID from the database
-            with db.get_db() as con:
-                with con.cursor() as cur:
-                    cur.execute("SELECT course_id FROM courses;")
-                    course_list = cur.fetchall()
-                    print(f"this is the course list: {course_list}")
-            
-                  
+            for ya in course_id:
+                with db.get_db() as con:
+                    with con.cursor() as cur:
+                        cur.execute("SELECT * FROM course_sessions where course_id = %s;", (ya))
+                        course_list = cur.fetchall()
+                        print(f"this is the course list: {course_list}")
+
+
 
 
             # List sessions in the database
@@ -99,7 +104,6 @@ def create_app(test_config=None):
             #         cur.execute("SELECT * FROM course_sessions WHERE course_id = %s;", (course_list,))
 
 
-            print(students)
             return render_template('sessions.html', students=students, course_list=course_list, course_name=course_name)
 
         if request.method == 'POST':
@@ -121,7 +125,7 @@ def create_app(test_config=None):
             # Insert session info into database
             with db.get_db() as con:
                 with con.cursor() as cur:
-                    cur.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour, number_students, session_time))
+                    cur.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour[0], number_students, session_time))
                     con.commit()
 
 

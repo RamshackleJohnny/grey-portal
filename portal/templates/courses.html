@@ -26,7 +26,7 @@
   <div class="bordered" style="width: 600px; max-height:400px; overflow-y:scroll;">
     <h2>Course Directory</h2>
       {% for class in all_courses %}
-        <h3>{{ class['course_id'] }}</h3>
+        <h3>{{ class['course_name'] }}</h3>
         Teacher: {% for people in all_teachers  %}
                   {% if class[2] == people[2] %}
                       {{ people [1] }}, {{ people[0] }}
