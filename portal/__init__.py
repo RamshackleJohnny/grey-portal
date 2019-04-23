@@ -109,11 +109,13 @@ def create_app(test_config=None):
     @app.route('/create-course', methods=['GET', 'POST'])
     @login_required
     def create_course():
-		course_name=request.form['coursename']
-		course_desc=request.form['coursedesc']
-		course_num=request.form['coursenumber']
-		connection = db.get_db()
-		cursor = connection.cursor()
+        if not g.user[5]=='teacher':
+           return abort(403)
+        course_name=request.form['coursename']
+        course_desc=request.form['coursedesc']
+        course_num=request.form['coursenumber']
+        connection = db.get_db()
+        cursor = connection.cursor()
         try:
             cursor.execute("INSERT INTO courses (course_name, description, course_number, teacher_id) VALUES (%s, %s, %s, %s)", (course_name, course_desc, course_num, g.user[0]))
             connection.commit()
@@ -153,7 +155,9 @@ def create_app(test_config=None):
     @app.route('/<id>/course-delete', methods=('POST','GET'))
     @login_required
     def delete_course(id):
-        get_course(id)
+        course = get_course(id)
+        if not g.user[0] == course[4]:
+           return abort(403)
         connection = db.get_db()
         cursor = connection.cursor()
         cursor.execute('SELECT course_name FROM courses WHERE course_id= %s',[id])
@@ -167,6 +171,12 @@ def create_app(test_config=None):
     @login_required
     def update_course(id):
         course = get_course(id)
+        if course is None:
+            print(f"User {g.user[0]} is attempting to edit a course that doesn't exist.")
+            return abort(404)
+        if course[4] is not g.user[0]:
+            print(f"User {g.user[0]} is attempting to edit a course that doesn't belong to them.")
+            return abort(403)
         if request.method== 'POST':
             new_name= request.form['course-name']
             new_desc= request.form['course-desc']
@@ -177,11 +187,7 @@ def create_app(test_config=None):
             connection.commit()
             flash(f"\"{new_name}\" has been updated.")
             return redirect(url_for('course_page'))
-        else:
-            if g.user[0] != course[0]:
-                print(f"Session ID: {g.user[0]}\nCourse:{course[4]}")
-                return abort(403)
-            return render_template('update-course.html', course=course)
+        return render_template('update-course.html', course=course)
 
     @app.route('/logout')
     def log_out():
