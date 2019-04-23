@@ -66,7 +66,7 @@ def create_app(test_config=None):
             # List course name from the database
             with db.get_db() as con:
                 with con.cursor() as cur:
-                    cur.execute("SELECT course_name FROM courses;")
+                    cur.execute("SELECT course_name, course_id FROM courses;")
                     course_name = cur.fetchall()
                     cur.execute("SELECT course_id FROM courses;")
                     course_id = cur.fetchall()
@@ -74,13 +74,16 @@ def create_app(test_config=None):
 
 
             # List course ID from the database
+            thelist = []
             for ya in course_id:
                 with db.get_db() as con:
                     with con.cursor() as cur:
                         cur.execute("SELECT * FROM course_sessions where course_id = %s;", (ya))
                         course_list = cur.fetchall()
-                        print(f"this is the course list: {course_list}")
+                        thelist.append(course_list)
+                        print(thelist)
 
+            print(thelist)
 
 
 
@@ -89,22 +92,7 @@ def create_app(test_config=None):
                 with con.cursor() as cur:
                     cur.execute("SELECT * FROM course_sessions;")
 
-            # List user sessions in the database
-            # with db.get_db() as con:
-            #    with con.cursor() as cur:
-            # cur.execute("SELECT * FROM user_sessions;")
-            # user_sessions = cur.fetchall()
-            # REMEMBER TO PUT user_sessions IN render_template AFTER UNCOMMENTING
-
-            # List courses with sessions
-
-            # with db.get_db() as con:
-            #     with con.cursor() as cur:
-            #         sessions = {}
-            #         cur.execute("SELECT * FROM course_sessions WHERE course_id = %s;", (course_list,))
-
-
-            return render_template('sessions.html', students=students, course_list=course_list, course_name=course_name)
+            return render_template('sessions.html', students=students, course_list=course_list, course_name=course_name, thelist=thelist)
 
         if request.method == 'POST':
 

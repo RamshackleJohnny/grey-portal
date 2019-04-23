@@ -14,16 +14,14 @@
 <ul>
     {% for course_lists in course_name %}
     <li>{{ course_lists }}</li>
+    <p>Course sessions</p>
+    <ul>
+        <li>{{ thelist[0] }}</li>
+    </ul>
     {% endfor %}
 </ul>
-<p>course sessions</p>
-<ul>
-    {% for course_lists in course_list %}
-    <li>{{ course_lists }}</li>
-    {% endfor %}
 
-</ul>
-   
+
 <!-- <form method="GET">
     <fieldset>
         <label>Select session</label>
