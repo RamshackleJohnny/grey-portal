@@ -1,6 +1,6 @@
 import functools
 
-from flask import Flask, render_template, request, session, redirect, url_for, g, flash
+from flask import Flask, render_template, request, session, redirect, url_for, g, flash, abort
 
 import psycopg2
 import psycopg2.extras
@@ -109,12 +109,12 @@ def create_app(test_config=None):
     @app.route('/create-course', methods=['GET', 'POST'])
     @login_required
     def create_course():
+		course_name=request.form['coursename']
+		course_desc=request.form['coursedesc']
+		course_num=request.form['coursenumber']
+		connection = db.get_db()
+		cursor = connection.cursor()
         try:
-            course_name=request.form['coursename']
-            course_desc=request.form['coursedesc']
-            course_num=request.form['coursenumber']
-            connection = db.get_db()
-            cursor = connection.cursor()
             cursor.execute("INSERT INTO courses (course_name, description, course_number, teacher_id) VALUES (%s, %s, %s, %s)", (course_name, course_desc, course_num, g.user[0]))
             connection.commit()
             flash(f"Your course, \"{course_name}\", was added with you as the teacher. You may now add students to this course and add sessions.")
@@ -122,8 +122,6 @@ def create_app(test_config=None):
             flash(f"Your course already exists with that code or with that course name. Please check the directory.")
         except psycopg2.errors.NotNullViolation:
             flash(f"Not all required information was submitted. Please fill in the form again.")
-        except:
-            flash("Something went wrong. Please contact an administrator.")
         finally:
             return redirect(url_for('course_page'))
 
@@ -148,7 +146,7 @@ def create_app(test_config=None):
     def get_course(id):
         connection = db.get_db()
         cursor = connection.cursor()
-        cursor.execute('SELECT course_id, course_name, description, course_number FROM courses WHERE course_id= %s', [id])
+        cursor.execute('SELECT course_id, course_name, description, course_number, teacher_id FROM courses WHERE course_id= %s', [id])
         course = cursor.fetchone()
         return course
 
@@ -179,7 +177,11 @@ def create_app(test_config=None):
             connection.commit()
             flash(f"\"{new_name}\" has been updated.")
             return redirect(url_for('course_page'))
-        return render_template('update-course.html', course=course)
+        else:
+            if g.user[0] != course[0]:
+                print(f"Session ID: {g.user[0]}\nCourse:{course[4]}")
+                return abort(403)
+            return render_template('update-course.html', course=course)
 
     @app.route('/logout')
     def log_out():
