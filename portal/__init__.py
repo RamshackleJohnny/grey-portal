@@ -56,43 +56,42 @@ def create_app(test_config=None):
     @app.route('/sessions', methods=['GET', 'POST'])
     def sessions():
 
-        if request.method == 'GET':
-            # List all the students in the database
+        # List all the students in the database
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("SELECT * FROM users WHERE role = 'student';")
+                students = cur.fetchall()
+
+        # List course name from the database
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("SELECT course_name, course_id FROM courses;")
+                course_name = cur.fetchall()
+                cur.execute("SELECT course_id FROM courses;")
+                course_id = cur.fetchall()
+                print(course_id)
+
+
+        # List course ID from the database
+        thelist = []
+        for ya in course_id:
             with db.get_db() as con:
                 with con.cursor() as cur:
-                    cur.execute("SELECT * FROM users WHERE role = 'student';")
-                    students = cur.fetchall()
+                    cur.execute("SELECT * FROM course_sessions where course_id = %s;", (ya))
+                    course_list = cur.fetchall()
+                    thelist.append(course_list)
+                    print(thelist)
 
-            # List course name from the database
-            with db.get_db() as con:
-                with con.cursor() as cur:
-                    cur.execute("SELECT course_name, course_id FROM courses;")
-                    course_name = cur.fetchall()
-                    cur.execute("SELECT course_id FROM courses;")
-                    course_id = cur.fetchall()
-                    print(course_id)
-
-
-            # List course ID from the database
-            thelist = []
-            for ya in course_id:
-                with db.get_db() as con:
-                    with con.cursor() as cur:
-                        cur.execute("SELECT * FROM course_sessions where course_id = %s;", (ya))
-                        course_list = cur.fetchall()
-                        thelist.append(course_list)
-                        print(thelist)
-
-            print(thelist)
+        print(thelist)
 
 
 
-            # List sessions in the database
-            with db.get_db() as con:
-                with con.cursor() as cur:
-                    cur.execute("SELECT * FROM course_sessions;")
+        # List sessions in the database
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("SELECT * FROM course_sessions;")
 
-            return render_template('sessions.html', students=students, course_list=course_list, course_name=course_name, thelist=thelist)
+        return render_template('sessions.html', students=students, course_list=course_list, course_name=course_name, thelist=thelist)
 
         if request.method == 'POST':
 
