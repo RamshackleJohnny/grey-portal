@@ -5,6 +5,12 @@ from flask import Flask, render_template, request, session, redirect, url_for, g
 import psycopg2
 import psycopg2.extras
 
+def page_not_found(e):
+	return render_template('404.html')
+
+def server_error(e):
+	return render_template('500.html')
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
@@ -13,6 +19,8 @@ def create_app(test_config=None):
         DB_NAME='portal',
         DB_USER='portal_user',
     )
+    app.register_error_handler(404, page_not_found)
+    app.register_error_handler(500, server_error)
 
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
