@@ -76,10 +76,6 @@ def create_app(test_config=None):
                     course_list = cur.fetchall()
                     print(f"this is the course list: {course_list}")
             
-            # List course sessions ID from the database
-            with db.get_db() as con:
-                with con.cursor() as cur:
-                    cur.execute("SELECT * FROM course_sessions WHERE course_id = %s;", (course_list,))
                   
 
 
@@ -121,12 +117,11 @@ def create_app(test_config=None):
                 with con.cursor() as cur:
                     cur.execute("SELECT * FROM courses WHERE course_name = %s ;", (courses_name,))
                     cour = cur.fetchone()
-                    print(cour[0])
 
             # Insert session info into database
             with db.get_db() as con:
                 with con.cursor() as cur:
-                    cur.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour[0], number_students, session_time))
+                    cur.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour, number_students, session_time))
                     con.commit()
 
 
