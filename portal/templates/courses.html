@@ -13,7 +13,7 @@
   <section class="flexbox">
     {% if g.user[5]=='teacher' %}
     <div class="bordered">
-    <form method="POST">
+    <form method='POST' action="/create-course">
       Course Name: <input type="text" name="coursename" required><br />
       Course Code: <input type="text" name="coursenumber" required><br />
       Course Description: <textarea name="coursedesc" required cols="35" maxlength="100"></textarea><br />
