@@ -97,15 +97,23 @@ def create_app(test_config=None):
     @app.route('/create-course', methods=['GET', 'POST'])
     @login_required
     def create_course():
-        course_name=request.form['coursename']
-        course_desc=request.form['coursedesc']
-        course_num=request.form['coursenumber']
-        connection = db.get_db()
-        cursor = connection.cursor()
-        cursor.execute("INSERT INTO courses (course_name, description, course_number, teacher_id) VALUES (%s, %s, %s, %s)", (course_name, course_desc, course_num, g.user[0]))
-        connection.commit()
-        flash(f"Your course, \"{course_name}\", was added with you as the teacher. You may now add students to this course and add sessions.")
-        return redirect(url_for('course_page'))
+        try:
+            course_name=request.form['coursename']
+            course_desc=request.form['coursedesc']
+            course_num=request.form['coursenumber']
+            connection = db.get_db()
+            cursor = connection.cursor()
+            cursor.execute("INSERT INTO courses (course_name, description, course_number, teacher_id) VALUES (%s, %s, %s, %s)", (course_name, course_desc, course_num, g.user[0]))
+            connection.commit()
+            flash(f"Your course, \"{course_name}\", was added with you as the teacher. You may now add students to this course and add sessions.")
+        except psycopg2.errors.UniqueViolation:
+            flash(f"Your course already exists with that code or with that course name. Please check the directory.")
+        except psycopg2.errors.NotNullViolation:
+            flash(f"Not all required information was submitted. Please fill in the form again.")
+        except:
+            flash("Something went wrong. Please contact an administrator.")
+        finally:
+            return redirect(url_for('course_page'))
 
 
     @app.route('/courses', methods=['GET', 'POST'])
@@ -119,7 +127,7 @@ def create_app(test_config=None):
         cursor.execute("SELECT role, id FROM users WHERE id = %s", [user_id])
         users_role = cursor.fetchone()
         # print(f"users_role: {users_role}")
-        cursor.execute("SELECT course_name, description, teacher_id, course_id FROM courses ORDER BY course_name ASC")
+        cursor.execute("SELECT course_name, description, teacher_id, course_id, course_number FROM courses ORDER BY course_name ASC")
         all_courses = cursor.fetchall()
         cursor.execute("SELECT first_name, last_name, id  FROM users WHERE role='teacher'")
         all_teachers = cursor.fetchall()
