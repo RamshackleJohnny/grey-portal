@@ -9,3 +9,5 @@ def test_index(client):
     response = client.get('/')
     assert b'<h1>TSCT Portal</h1>' in response.data
     assert b'<form action="login" method="post">' in response.data
+    # There is NO nav bar if we're not logged in.
+    assert b'<nav>' not in response.data
