@@ -11,6 +11,9 @@ def page_not_found(e):
 def server_error(e):
 	return render_template('500.html')
 
+def forbidden(e):
+	return render_template('403.html')
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
@@ -21,6 +24,7 @@ def create_app(test_config=None):
     )
     app.register_error_handler(404, page_not_found)
     app.register_error_handler(500, server_error)
+    app.register_error_handler(403, forbidden)
 
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
