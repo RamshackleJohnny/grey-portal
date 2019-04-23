@@ -16,8 +16,8 @@ CREATE TABLE users (
 -- Teacher has courses
 CREATE TABLE courses (
     course_id bigserial PRIMARY KEY,
-    course_number text NOT NULL,
-    course_name text NOT NULL,
+    course_number text UNIQUE NOT NULL,
+    course_name text UNIQUE NOT NULL,
     description text NOT NULL,
     teacher_id bigserial NOT NULL REFERENCES users(id)
 );
