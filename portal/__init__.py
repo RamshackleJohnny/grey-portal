@@ -55,6 +55,35 @@ def create_app(test_config=None):
 
     @app.route('/sessions', methods=['GET', 'POST'])
     def sessions():
+        # List all the students in the database
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("SELECT * FROM users WHERE role = 'student';")
+                students = cur.fetchall()
+        # List course name from the database
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("SELECT course_name, course_id FROM courses;")
+                course_name = cur.fetchall()
+                cur.execute("SELECT course_id FROM courses;")
+                course_id = cur.fetchall()
+        # List course ID from the database
+        sessions = {}
+        course_ids = []
+        for it in course_id:
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("SELECT * FROM course_sessions where course_id = %s;", (it))
+                    course_list = cur.fetchall()
+                    tostring = str(it)
+                    oneout = tostring.replace('[', '')
+                    twoout= oneout.replace(']', '')
+                    course_ids.append(twoout)
+                    sessions.update( {twoout : course_list})
+        # List sessions in the database
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("SELECT * FROM course_sessions;")
 
         if request.method == 'POST':
             # Info from form field
@@ -73,47 +102,9 @@ def create_app(test_config=None):
                 with con.cursor() as cur:
                     cur.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour[0], number_students, session_time))
                     con.commit()
-                    print('Did eet')
-
-            return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students)
+            return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students,students=students, course_list=course_list, course_name=course_name, sessions=sessions, course_ids=course_ids)
 
 
-        # List all the students in the database
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("SELECT * FROM users WHERE role = 'student';")
-                students = cur.fetchall()
-
-        # List course name from the database
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("SELECT course_name, course_id FROM courses;")
-                course_name = cur.fetchall()
-                cur.execute("SELECT course_id FROM courses;")
-                course_id = cur.fetchall()
-
-
-        # List course ID from the database
-        sessions = {}
-        course_ids = []
-        for it in course_id:
-            with db.get_db() as con:
-                with con.cursor() as cur:
-                    cur.execute("SELECT * FROM course_sessions where course_id = %s;", (it))
-                    course_list = cur.fetchall()
-                    tostring = str(it)
-                    oneout = tostring.replace('[', '')
-                    twoout= oneout.replace(']', '')
-                    course_ids.append(twoout)
-                    sessions.update( {twoout : course_list})
-                    print(sessions)
-                    print(course_ids)
-
-
-        # List sessions in the database
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("SELECT * FROM course_sessions;")
 
 
         return render_template('sessions.html', students=students, course_list=course_list, course_name=course_name, sessions=sessions, course_ids=course_ids)
