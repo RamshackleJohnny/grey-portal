@@ -95,17 +95,17 @@ def create_app(test_config=None):
 
         # List course ID from the database
         thedict = {}
-        for ya in course_id:
+        for it in course_id:
             with db.get_db() as con:
                 with con.cursor() as cur:
-                    cur.execute("SELECT * FROM course_sessions where course_id = %s;", (ya))
+                    cur.execute("SELECT * FROM course_sessions where course_id = %s;", (it))
                     course_list = cur.fetchall()
-                    yah = str(ya)
-                    yeet = yah.replace('[', '')
-                    yote = yeet.replace(']', '')
-                    thedict.update( {yote : course_list})
+                    tostring = str(it)
+                    oneout = tostring.replace('[', '')
+                    twoout= oneout.replace(']', '')
+                    thedict.update( {twoout : course_list})
 
-                    # print(ya)
+                    # print(it)
                     # print(course_list)
                     print(thedict)
 

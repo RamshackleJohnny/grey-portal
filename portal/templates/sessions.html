@@ -19,10 +19,11 @@
       <br>
       <p>Course sessions</p>
       <br>
-      <ul>
-          <li>Session ID: {{ thedict['7'][0][0]}} Course Number: {{ thedict['7'][0][1]}} Time: {{ thedict['7'][0][3]}} Students: {{ thedict['7'][0][4]}}</li>
-          <li>{{ course_lists[1] }}
-          </ul>
+      {% for dict in thedict %}
+        <ul>
+          <li>Session ID: {{ thedict[dict][0][0]}} Course Number: {{ thedict[dict][0][1]}} Time: {{ thedict[dict][0][3]}} Students: {{ thedict[dict][0][4]}}</li>
+        </ul>
+      {% endfor %}
           <br>
       {% endfor %}
         </ul>
