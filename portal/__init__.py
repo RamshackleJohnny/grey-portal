@@ -56,6 +56,28 @@ def create_app(test_config=None):
     @app.route('/sessions', methods=['GET', 'POST'])
     def sessions():
 
+        if request.method == 'POST':
+            # Info from form field
+            courses_name = request.form['courses_name']
+            course_session_number = request.form['course_session_number']
+            course_session_id = request.form.get('course_session_id', type=int)
+            session_time = request.form['session_time']
+            number_students = request.form['number_students']
+            # Executions and Fetch for course_session_cursor
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("SELECT * FROM courses WHERE course_name = %s ;", (courses_name,))
+                    cour = cur.fetchone()
+            # Insert session info into database
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour[0], number_students, session_time))
+                    con.commit()
+                    print('Did eet')
+
+            return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students)
+
+
         # List all the students in the database
         with db.get_db() as con:
             with con.cursor() as cur:
@@ -69,21 +91,21 @@ def create_app(test_config=None):
                 course_name = cur.fetchall()
                 cur.execute("SELECT course_id FROM courses;")
                 course_id = cur.fetchall()
-                print(course_id)
 
 
         # List course ID from the database
-        thelist = []
+        thedict = {}
         for ya in course_id:
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("SELECT * FROM course_sessions where course_id = %s;", (ya))
                     course_list = cur.fetchall()
-                    thelist.append(course_list)
-                    print(thelist)
+                    yah = str(ya)
+                    thedict.update( {yah : course_list})
 
-        print(thelist)
-
+                    # print(ya)
+                    # print(course_list)
+                    print(thedict)
 
 
         # List sessions in the database
@@ -91,35 +113,8 @@ def create_app(test_config=None):
             with con.cursor() as cur:
                 cur.execute("SELECT * FROM course_sessions;")
 
-        return render_template('sessions.html', students=students, course_list=course_list, course_name=course_name, thelist=thelist)
 
-        if request.method == 'POST':
-
-
-            # Info from form field
-            courses_name = request.form['courses_name']
-            course_session_number = request.form['course_session_number']
-            course_session_id = request.form.get('course_session_id', type=int)
-            session_time = request.form['session_time']
-            number_students = request.form['number_students']
-
-            # Executions and Fetch for course_session_cursor
-            with db.get_db() as con:
-                with con.cursor() as cur:
-                    cur.execute("SELECT * FROM courses WHERE course_name = %s ;", (courses_name,))
-                    cour = cur.fetchone()
-
-            # Insert session info into database
-            with db.get_db() as con:
-                with con.cursor() as cur:
-                    cur.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour[0], number_students, session_time))
-                    con.commit()
-
-
-
-            return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students)
-
-        return render_template('sessions.html', students=students, course_list=course_list)
+        return render_template('sessions.html', students=students, course_list=course_list, course_name=course_name, thedict=thedict)
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():

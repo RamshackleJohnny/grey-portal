@@ -12,7 +12,7 @@ def get_db():
         # open a connection, save it to close when done
         DB_URL = os.environ.get('DATABASE_URL', None)
         if DB_URL:
-            g.db = psycopg2.connect(DB_URL, sslmode='require')
+            g.db = psycopg2.connect(DB_URL, sslmode='require', cursor_factory=DictCursor)
         else:
             g.db = psycopg2.connect(
                 dbname=current_app.config['DB_NAME'],
