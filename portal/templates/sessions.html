@@ -15,13 +15,13 @@
     <p>List of Courses</p>
     <ul>
       {% for course_lists in course_name %}
-      <li>{{ course_lists }}</li>
+      <li>{{ course_lists[0] }}</li>
       <br>
       <p>Course sessions</p>
       <br>
       <ul>
-          <li>{{ thedict['7']}}</li>
-          <li>{{ course_list }}
+          <li>Session ID: {{ thedict['7'][0][0]}} Course Number: {{ thedict['7'][0][1]}} Time: {{ thedict['7'][0][3]}} Students: {{ thedict['7'][0][4]}}</li>
+          <li>{{ course_lists[1] }}
           </ul>
           <br>
       {% endfor %}
