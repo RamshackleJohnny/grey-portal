@@ -101,7 +101,9 @@ def create_app(test_config=None):
                     cur.execute("SELECT * FROM course_sessions where course_id = %s;", (ya))
                     course_list = cur.fetchall()
                     yah = str(ya)
-                    thedict.update( {yah : course_list})
+                    yeet = yah.replace('[', '')
+                    yote = yeet.replace(']', '')
+                    thedict.update( {yote : course_list})
 
                     # print(ya)
                     # print(course_list)
