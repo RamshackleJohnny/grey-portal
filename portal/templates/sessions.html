@@ -14,19 +14,17 @@
 
     <p>List of Courses</p>
     <ul>
-      {% for course_lists in course_name %}
-      <li>{{ course_lists[0] }}</li>
-      <br>
-      <p>Course sessions</p>
-      <br>
-      {% for dict in thedict %}
-        <ul>
-          <li>Session ID: {{ thedict[dict][0][0]}} Course Number: {{ thedict[dict][0][1]}} Time: {{ thedict[dict][0][3]}} Students: {{ thedict[dict][0][4]}}</li>
-        </ul>
-      {% endfor %}
-          <br>
-      {% endfor %}
-        </ul>
+        {% for course in course_name %}
+        <h2>{{course[0]}}</h2>
+          {% for session in sessions[course[1]|string] %}
+            <li>Session ID: {{session[0]}}</li>
+            <li>Course ID: {{session[1]}} </li>
+            <li>Time: {{session[3]}} </li>
+            <li>Number of Students: {{session[4]}} </li>
+            <hr>
+            {% endfor %}
+          {% endfor %}
+    </ul>
 </div>
 
 <form method="POST">

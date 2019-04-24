@@ -94,7 +94,8 @@ def create_app(test_config=None):
 
 
         # List course ID from the database
-        thedict = {}
+        sessions = {}
+        course_ids = []
         for it in course_id:
             with db.get_db() as con:
                 with con.cursor() as cur:
@@ -103,11 +104,10 @@ def create_app(test_config=None):
                     tostring = str(it)
                     oneout = tostring.replace('[', '')
                     twoout= oneout.replace(']', '')
-                    thedict.update( {twoout : course_list})
-
-                    # print(it)
-                    # print(course_list)
-                    print(thedict)
+                    course_ids.append(twoout)
+                    sessions.update( {twoout : course_list})
+                    print(sessions)
+                    print(course_ids)
 
 
         # List sessions in the database
@@ -116,7 +116,7 @@ def create_app(test_config=None):
                 cur.execute("SELECT * FROM course_sessions;")
 
 
-        return render_template('sessions.html', students=students, course_list=course_list, course_name=course_name, thedict=thedict)
+        return render_template('sessions.html', students=students, course_list=course_list, course_name=course_name, sessions=sessions, course_ids=course_ids)
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
