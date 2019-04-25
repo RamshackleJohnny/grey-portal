@@ -32,9 +32,9 @@
                       {{ people [1] }}, {{ people[0] }}
                   {% endif %}
                 {% endfor %}<br />
-        <i>{{ class[1] }}</i>
+        <i>{{ class[1] }}</i><br />
         {% if g.user[0] == class[2] %}
-          <a class="fa fa-trash" href="{{ url_for('delete_course', id=class[3]) }}"></a> <a class="fa fa-pencil-square-o" href="{{ url_for('update_course', id=class[3]) }}"></a>
+          <a class="fa fa-trash" href="{{ url_for('courses.delete_course', id=class[3]) }}"></a> <a class="fa fa-pencil-square-o" href="{{ url_for('courses.update_course', id=class[3]) }}"></a>
         {% endif %}
         <hr />
       {% endfor %}
