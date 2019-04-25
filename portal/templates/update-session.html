@@ -1,0 +1,32 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+<form method="post">
+  <fieldset>
+      <label for="student_id">Select student</label>
+      <select id="student_id" name="student_id">
+        {% for students in students %}
+        <option value="{{ students[0] }}">{{ students[2] }} {{ students[3] }}</option>
+        {% endfor %}
+      </select>
+      <label for="session_id">Select course session</label>
+      <select id="session_id" name="session_id">
+        {% for course_sessions in course_sessions %}
+        <option value="{{ course_sessions[0] }}">ID: {{ course_sessions[2] }} Time: {{ course_sessions[3] }} # of students: {{ course_sessions[4] }}</option>
+        {% endfor %}
+      </select>
+      <label for="submit">
+        <button type="submit">Add student to session</button>
+      </label>
+     
+  </fieldset> 
+</form>
+
+<ul>
+  {% for user_sessions in user_sessions %}
+  <li>{{ user_sessions }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

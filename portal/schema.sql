@@ -34,8 +34,8 @@ CREATE TABLE course_sessions (
 
 
 CREATE TABLE user_sessions (
-    student_id smallint REFERENCES users(id),
-    session_id smallint REFERENCES course_sessions(id)
+    student_id bigint REFERENCES users(id),
+    session_id bigint REFERENCES course_sessions(id)
 );
 
 CREATE TABLE assignments (

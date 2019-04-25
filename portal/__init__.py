@@ -108,7 +108,6 @@ def create_app(test_config=None):
 
 
         return render_template('sessions.html', students=students, course_list=course_list, course_name=course_name, sessions=sessions, course_ids=course_ids)
-
     @app.route('/login', methods=['GET', 'POST'])
     def login():
         if request.method == 'POST':
@@ -132,6 +131,41 @@ def create_app(test_config=None):
                         session['user_id'] = sesh['id']
                 return redirect(url_for('dash'))
         return render_template('index.html')
+
+    @app.route('/update-session', methods=['GET', 'POST'])
+    def update_session():
+
+        
+
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("SELECT * FROM users WHERE role = 'student';")
+                students = cur.fetchall()
+
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("SELECT * FROM course_sessions;")
+                course_sessions = cur.fetchall()
+        
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("SELECT * FROM user_sessions;")
+                user_sessions = cur.fetchall()
+
+        if request.method == 'POST':
+
+            student_id = request.form['student_id']
+            session_id = request.form['session_id']
+
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("INSERT INTO user_sessions (student_id, session_id) VALUES (%s,%s); ", (student_id, session_id))
+                    con.commit()
+            
+          
+            return render_template('update-session.html', session_id=session_id, student_id=student_id, students=students)
+
+        return render_template('update-session.html', students=students, course_sessions=course_sessions, user_sessions=user_sessions)
 
     @app.route('/courses', methods=['GET', 'POST'])
     @login_required
