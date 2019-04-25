@@ -97,11 +97,16 @@ def create_app(test_config=None):
                 with con.cursor() as cur:
                     cur.execute("SELECT * FROM courses WHERE course_name = %s ;", (courses_name,))
                     cour = cur.fetchone()
+
             # Insert session info into database
-            with db.get_db() as con:
-                with con.cursor() as cur:
-                    cur.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour[0], number_students, session_time))
-                    con.commit()
+            try:
+                with db.get_db() as con:
+                    with con.cursor() as cur:
+                        cur.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour[0], number_students, session_time))
+                        con.commit()
+                        flash("Your session was added. You may now add students to this session using the directory.")
+            except:
+                flash("We could not add this session. Check the name and try again.")
             return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students,students=students, course_list=course_list, course_name=course_name, sessions=sessions, course_ids=course_ids)
 
 
