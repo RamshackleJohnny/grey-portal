@@ -139,9 +139,28 @@ def create_app(test_config=None):
 
     @app.route('/update-session', methods=['GET', 'POST'])
     def update_session():
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("SELECT id FROM course_sessions")
+                sesh_ids = cur.fetchall()
 
-        
-        
+        sessions = {}
+        session_ids = []
+        for it in sesh_ids:
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("SELECT student_id FROM user_sessions where session_id = %s;", (it))
+                    course_list = cur.fetchall()
+                    tostring = str(it)
+                    oneout = tostring.replace('[', '')
+                    twoout= oneout.replace(']', '')
+                    session_ids.append(twoout)
+                    sessions.update( {twoout : course_list})
+                    print(sessions)
+
+
+        print(session_ids)
+
         # List all from users with the role 'student'
         with db.get_db() as con:
             with con.cursor() as cur:
@@ -153,13 +172,13 @@ def create_app(test_config=None):
             with con.cursor() as cur:
                 cur.execute("SELECT * FROM course_sessions ORDER BY course_id ASC;")
                 course_sessions = cur.fetchall()
-        
+
         # List all from user_sessions
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("SELECT * FROM user_sessions;")
                 user_sessions = cur.fetchall()
-        
+
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("SELECT id, first_name, last_name FROM users users LEFT JOIN user_sessions us ON users.id = us.student_id ORDER BY id ASC;")
@@ -171,16 +190,16 @@ def create_app(test_config=None):
             student_id = request.form['student_id']
             session_id = request.form['session_id']
 
-            
+
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("INSERT INTO user_sessions (student_id, session_id) VALUES (%s,%s); ", (student_id, session_id))
                     con.commit()
-            
-          
-            return render_template('update-session.html', session_id=session_id, student_id=student_id, students=students)
 
-        return render_template('update-session.html', students=students, course_sessions=course_sessions, user_sessions=user_sessions, session_students=students_in_sessions)
+
+            return render_template('update-session.html', session_id=session_id, student_id=student_id, students=students, sessions=sessions, session_ids=session_ids)
+
+        return render_template('update-session.html', students=students, course_sessions=course_sessions, user_sessions=user_sessions, session_students=students_in_sessions,sessions=sessions, session_ids=session_ids)
 
     @app.route('/courses', methods=['GET', 'POST'])
     @login_required

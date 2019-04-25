@@ -20,8 +20,8 @@
       <label for="submit">
         <button type="submit">Add student to session</button>
       </label>
-     
-  </fieldset> 
+
+  </fieldset>
 </form>
 <p>Course Sessions:</p>
 <ul>
@@ -36,14 +36,15 @@
 
   {% endfor %}
 </ul>
-<p>List of students in each session</p>
+
+
 <ul>
-  {% for session_students in session_students %}
-  <li>Session ID: {{ session_students[0] }}</li>
-  <ul>
-      <li>{{ session_students[1] }} {{ session_students[2] }}</li>
-  </ul>
-    
-  {% endfor %}
-</ul>
+  <h1> list</h1>
+    {% for session in session_ids %}
+    <h2>{{ session }}</h2>
+      {% for sesh in sessions[session] %}
+        <li>Student: {{ session_students[0] }}</li>
+        <hr>
+      {% endfor %}
+    {% endfor %}
 {% endblock %}
