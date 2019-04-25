@@ -39,7 +39,11 @@
 <p>List of students in each session</p>
 <ul>
   {% for session_students in session_students %}
-  <li>{{ session_students[1] }} {{ session_students[2] }}</li>
+  <li>Session ID: {{ session_students[0] }}</li>
+  <ul>
+      <li>{{ session_students[1] }} {{ session_students[2] }}</li>
+  </ul>
+    
   {% endfor %}
 </ul>
 {% endblock %}
