@@ -23,10 +23,23 @@
      
   </fieldset> 
 </form>
-
+<p>Course Sessions:</p>
 <ul>
-  {% for user_sessions in user_sessions %}
-  <li>{{ user_sessions }}</li>
+  {% for course_sessions in course_sessions %}
+  <li>Session ID: {{ course_sessions[0] }}</li>
+  <ul>
+    <li>Number of students: {{ course_sessions[4] }}</li>
+  </ul>
+    <ul>
+      <li>Time: {{ course_sessions[3] }}</li>
+    </ul>
+
+  {% endfor %}
+</ul>
+<p>List of students in each session</p>
+<ul>
+  {% for session_students in session_students %}
+  <li>{{ session_students[1] }} {{ session_students[2] }}</li>
   {% endfor %}
 </ul>
 {% endblock %}

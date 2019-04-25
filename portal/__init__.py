@@ -104,7 +104,7 @@ def create_app(test_config=None):
                     with con.cursor() as cur:
                         cur.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour[0], number_students, session_time))
                         con.commit()
-                        flash("Your session was added. You may now add students to this session using the directory.")
+                        flash("<h1>Your session was added. You may now add students to this session using the directory.</")
             except:
                 flash("We could not add this session. Check the name and try again.")
             return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students,students=students, course_list=course_list, course_name=course_name, sessions=sessions, course_ids=course_ids)
@@ -141,27 +141,36 @@ def create_app(test_config=None):
     def update_session():
 
         
-
+        
+        # List all from users with the role 'student'
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("SELECT * FROM users WHERE role = 'student';")
                 students = cur.fetchall()
 
+        # List all from course_sessions
         with db.get_db() as con:
             with con.cursor() as cur:
-                cur.execute("SELECT * FROM course_sessions;")
+                cur.execute("SELECT * FROM course_sessions ORDER BY course_id ASC;")
                 course_sessions = cur.fetchall()
         
+        # List all from user_sessions
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("SELECT * FROM user_sessions;")
                 user_sessions = cur.fetchall()
+        
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("SELECT id, first_name, last_name FROM users users LEFT JOIN user_sessions us ON users.id = us.student_id ORDER BY id ASC;")
+                students_in_sessions = cur.fetchall()
 
         if request.method == 'POST':
 
             student_id = request.form['student_id']
             session_id = request.form['session_id']
 
+            
             with db.get_db() as con:
                 with con.cursor() as cur:
                     cur.execute("INSERT INTO user_sessions (student_id, session_id) VALUES (%s,%s); ", (student_id, session_id))
@@ -170,7 +179,7 @@ def create_app(test_config=None):
           
             return render_template('update-session.html', session_id=session_id, student_id=student_id, students=students)
 
-        return render_template('update-session.html', students=students, course_sessions=course_sessions, user_sessions=user_sessions)
+        return render_template('update-session.html', students=students, course_sessions=course_sessions, user_sessions=user_sessions, session_students=students_in_sessions)
 
     @app.route('/courses', methods=['GET', 'POST'])
     @login_required

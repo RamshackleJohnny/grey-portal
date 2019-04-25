@@ -12,15 +12,15 @@
       {% endfor %}
     </ul>
 
-    <p>List of Courses</p>
+    <p>List of Courses and Sessions</p>
     <ul>
         {% for course in course_name %}
-        <h2>{{course[0]}}</h2>
+        <h2>{{ course[0] }}</h2>
           {% for session in sessions[course[1]|string] %}
-            <li>Session ID: {{session[0]}}</li>
-            <li>Course ID: {{session[1]}} </li>
-            <li>Time: {{session[3]}} </li>
-            <li>Number of Students: {{session[4]}} </li>
+            <li>Session ID: {{ session[0] }}</li>
+            <li>Course ID: {{ session[1] }} </li>
+            <li>Time: {{ session[3] }} </li>
+            <li>Number of Students: {{ session[4] }} </li>
             {% if g.user['role']=='teacher' %}<br />
             <a class="fa fa-trash" href="{{ url_for('delete_course', id=session[0]) }}"></a> 
             <a class="fa fa-pencil-square-o" href="{{ url_for('update_session',id=session[0]) }}"></a>
