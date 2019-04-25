@@ -105,3 +105,9 @@ nav ul{
 nav ul li{
   display: inline-block;
 }
+
+textarea{
+  height: 150px;
+  resize: none;
+  display: block;
+}
