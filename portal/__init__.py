@@ -156,9 +156,9 @@ def create_app(test_config=None):
                     twoout= oneout.replace(']', '')
                     session_ids.append(twoout)
                     sessions.update( {twoout : course_list})
-                    print(sessions)
 
 
+        print(sessions)
         print(session_ids)
 
         # List all from users with the role 'student'

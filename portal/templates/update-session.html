@@ -43,7 +43,7 @@
     {% for session in session_ids %}
     <h2>{{ session }}</h2>
       {% for sesh in sessions[session] %}
-        <li>Student: {{ session_students[0] }}</li>
+        <li>Student: {{ sessions[session] }}</li>
         <hr>
       {% endfor %}
     {% endfor %}
