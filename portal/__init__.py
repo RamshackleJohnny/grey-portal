@@ -210,9 +210,9 @@ def create_app(test_config=None):
                     con.commit()
 
 
-            return render_template('update-session.html', session_id=session_id, student_id=student_id, students=students, sessions=sessions, session_ids=session_ids)
+            return render_template('update-session.html',thepeople=thepeople, session_id=session_id, student_id=student_id, students=students, sessions=sessions, session_ids=session_ids)
 
-        return render_template('update-session.html',thepeople=thepeople students=students, course_sessions=course_sessions, user_sessions=user_sessions, session_students=students_in_sessions,sessions=sessions, session_ids=session_ids)
+        return render_template('update-session.html',thepeople=thepeople, students=students, course_sessions=course_sessions, user_sessions=user_sessions, session_students=students_in_sessions,sessions=sessions, session_ids=session_ids)
 
     @app.route('/courses', methods=['GET', 'POST'])
     @login_required
