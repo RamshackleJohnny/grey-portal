@@ -149,20 +149,26 @@ def create_app(test_config=None):
                 cur.execute("SELECT id FROM course_sessions")
                 sesh_ids = cur.fetchall()
 
+        thepeople = {}
         sessions = {}
         session_ids = []
         for it in sesh_ids:
             with db.get_db() as con:
                 with con.cursor() as cur:
                     # join this table to users table to display specific user's info
-                    cur.execute("SELECT student_id FROM user_sessions where session_id = %s;", (it))
+                    cur.execute("SELECT student_id FROM user_sessions WHERE session_id = %s;", (it))
                     course_list = cur.fetchall()
-
             sessions[f'{it[0]}'] = course_list
+            for names in course_list:
+                with db.get_db() as con:
+                    with con.cursor() as cur:
+                        cur.execute("SELECT first_name, last_name FROM users where id = %s;", (names))
+                        namelist = cur.fetchall()
+                thepeople[f'{names[0]}'] = namelist
+                print(thepeople)
 
 
-        print('Session dictionary:',sessions)
-        #print('Session list',session_ids)
+
 
         # List all from users with the role 'student'
         with db.get_db() as con:
@@ -206,7 +212,7 @@ def create_app(test_config=None):
 
             return render_template('update-session.html', session_id=session_id, student_id=student_id, students=students, sessions=sessions, session_ids=session_ids)
 
-        return render_template('update-session.html', students=students, course_sessions=course_sessions, user_sessions=user_sessions, session_students=students_in_sessions,sessions=sessions, session_ids=session_ids)
+        return render_template('update-session.html',thepeople=thepeople students=students, course_sessions=course_sessions, user_sessions=user_sessions, session_students=students_in_sessions,sessions=sessions, session_ids=session_ids)
 
     @app.route('/courses', methods=['GET', 'POST'])
     @login_required
