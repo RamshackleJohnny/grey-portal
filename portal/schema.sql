@@ -35,7 +35,8 @@ CREATE TABLE course_sessions (
 
 CREATE TABLE user_sessions (
     student_id bigint REFERENCES users(id),
-    session_id bigint REFERENCES course_sessions(id)
+    session_id bigint REFERENCES course_sessions(id),
+    CONSTRAINT user_session_key PRIMARY KEY (student_id, session_id)
 );
 
 CREATE TABLE assignments (

@@ -38,7 +38,7 @@
 </ul>
 
 
-<ul>
+<!-- <ul>
   <h1> list</h1>
     {% for session in session_ids %}
     <h2>{{ session }}</h2>
@@ -47,4 +47,15 @@
         <hr>
       {% endfor %}
     {% endfor %}
+</ul> -->
+<ul>
+  {% for key, values in sessions.items() %}
+    <h1>Course Session: {{ key }}</h1>
+    <h2>Students:</h2>
+    {% for value in values %}
+      <!--change things around so that we reference more user-related data than just the id-->
+      <li>{{ value[0] }}</li>
+    {% endfor %}
+  {% endfor %}
+</ul>
 {% endblock %}

@@ -75,11 +75,7 @@ def create_app(test_config=None):
                 with con.cursor() as cur:
                     cur.execute("SELECT * FROM course_sessions where course_id = %s;", (it))
                     course_list = cur.fetchall()
-                    tostring = str(it)
-                    oneout = tostring.replace('[', '')
-                    twoout= oneout.replace(']', '')
-                    course_ids.append(twoout)
-                    sessions.update( {twoout : course_list})
+                   
         # List sessions in the database
         with db.get_db() as con:
             with con.cursor() as cur:
@@ -149,17 +145,15 @@ def create_app(test_config=None):
         for it in sesh_ids:
             with db.get_db() as con:
                 with con.cursor() as cur:
+                    # join this table to users table to display specific user's info
                     cur.execute("SELECT student_id FROM user_sessions where session_id = %s;", (it))
                     course_list = cur.fetchall()
-                    tostring = str(it)
-                    oneout = tostring.replace('[', '')
-                    twoout= oneout.replace(']', '')
-                    session_ids.append(twoout)
-                    sessions.update( {twoout : course_list})
+
+            sessions[f'{it[0]}'] = course_list
 
 
-        print(sessions)
-        print(session_ids)
+        print('Session dictionary:',sessions)
+        #print('Session list',session_ids)
 
         # List all from users with the role 'student'
         with db.get_db() as con:
@@ -179,16 +173,20 @@ def create_app(test_config=None):
                 cur.execute("SELECT * FROM user_sessions;")
                 user_sessions = cur.fetchall()
 
+        # Join table for user_sessions and users
         with db.get_db() as con:
             with con.cursor() as cur:
                 cur.execute("SELECT id, first_name, last_name FROM users users LEFT JOIN user_sessions us ON users.id = us.student_id ORDER BY id ASC;")
                 students_in_sessions = cur.fetchall()
-                print(students_in_sessions)
+                #print(students_in_sessions)
 
         if request.method == 'POST':
-
+            
+            
             student_id = request.form['student_id']
             session_id = request.form['session_id']
+
+            # before inserting these values, check that this pair of values ins't already in the user_sessions table
 
 
             with db.get_db() as con:
