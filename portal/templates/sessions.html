@@ -17,7 +17,7 @@
         {% for course in course_name %}
         <h2>{{ course[0] }}</h2>
           {% for session in sessions[course[1]|string] %}
-            <li>Session ID: {{ session[0] }}</li>
+            <li>Session ID: {{ session }}</li>
             <li>Course ID: {{ session[1] }} </li>
             <li>Time: {{ session[3] }} </li>
             <li>Number of Students: {{ session[4] }} </li>

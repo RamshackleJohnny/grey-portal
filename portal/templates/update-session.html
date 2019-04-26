@@ -8,7 +8,7 @@
       <label for="student_id">Select student</label>
       <select id="student_id" name="student_id">
         {% for students in students %}
-        <option value="{{ students[0] }}">{{ students[2] }} {{ students[3] }}</option>
+        <option value="{{ students[0] }}">ID: {{ students[0] }} {{ students[2] }} {{ students[3] }}</option>
         {% endfor %}
       </select>
       <label for="session_id">Select course session</label>
@@ -49,12 +49,15 @@
     {% endfor %}
 </ul> -->
 <ul>
+ 
   {% for key, values in sessions.items() %}
     <h1>Course Session: {{ key }}</h1>
     <h2>Students:</h2>
+ 
     {% for value in values %}
       <!--change things around so that we reference more user-related data than just the id-->
       <li>{{ value[0] }}</li>
+    
     {% endfor %}
   {% endfor %}
 </ul>
