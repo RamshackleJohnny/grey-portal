@@ -55,31 +55,40 @@ def create_app(test_config=None):
 
     @app.route('/sessions', methods=['GET', 'POST'])
     def sessions():
+        if request.method == 'POST' or request.method == 'GET':
         # List all the students in the database
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("SELECT * FROM users WHERE role = 'student';")
-                students = cur.fetchall()
-        # List course name from the database
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("SELECT course_name, course_id FROM courses;")
-                course_name = cur.fetchall()
-                cur.execute("SELECT course_id FROM courses;")
-                course_id = cur.fetchall()
-        # List course ID from the database
-        sessions = {}
-        course_ids = []
-        for it in course_id:
             with db.get_db() as con:
                 with con.cursor() as cur:
-                    cur.execute("SELECT * FROM course_sessions where course_id = %s;", (it))
-                    course_list = cur.fetchall()
-                   
-        # List sessions in the database
-        with db.get_db() as con:
-            with con.cursor() as cur:
-                cur.execute("SELECT * FROM course_sessions;")
+                    cur.execute("SELECT * FROM users WHERE role = 'student';")
+                    students = cur.fetchall()
+                    # List course name from the database
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("SELECT course_name, course_id FROM courses;")
+                    course_name = cur.fetchall()
+                    cur.execute("SELECT course_id FROM courses;")
+                    course_id = cur.fetchall()
+
+            # List course ID from the database
+            sessions = {}
+            course_ids = []
+
+            for it in course_id:
+                with db.get_db() as con:
+                    with con.cursor() as cur:
+                        cur.execute("SELECT * FROM course_sessions where course_id = %s;", (it))
+                        course_list = cur.fetchall()
+                        tostring = str(it)
+                        oneout = tostring.replace('[', '')
+                        twoout= oneout.replace(']', '')
+                        course_ids.append(twoout)
+                        sessions.update( {twoout : course_list})
+
+
+                        # List sessions in the database
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("SELECT * FROM course_sessions;")
 
         if request.method == 'POST':
             # Info from form field
@@ -181,8 +190,8 @@ def create_app(test_config=None):
                 #print(students_in_sessions)
 
         if request.method == 'POST':
-            
-            
+
+
             student_id = request.form['student_id']
             session_id = request.form['session_id']
 
