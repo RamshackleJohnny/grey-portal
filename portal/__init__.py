@@ -158,13 +158,25 @@ def create_app(test_config=None):
                     # join this table to users table to display specific user's info
                     cur.execute("SELECT student_id FROM user_sessions WHERE session_id = %s;", (it))
                     course_list = cur.fetchall()
-            sessions[f'{it[0]}'] = course_list
+                    newest = []
+                    for item in course_list:
+                        tostring = str(item)
+                        oneout = tostring.replace('[', '')
+                        twoout= oneout.replace(']', '')
+                        newest.append(twoout)
+            sessions[f'{it[0]}'] = newest
+            #print(sessions)
             for names in course_list:
                 with db.get_db() as con:
                     with con.cursor() as cur:
                         cur.execute("SELECT first_name, last_name FROM users where id = %s;", (names))
                         namelist = cur.fetchall()
-                thepeople[f'{names[0]}'] = namelist
+                        #print(namelist)
+                        newestlist = []
+                        for item in namelist:
+                            print(item[1])
+                            newestlist.extend(item)
+                        thepeople[f'{names[0]}'] = newestlist
                 print(thepeople)
 
 
