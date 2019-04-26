@@ -27,14 +27,35 @@ CREATE TABLE courses (
 CREATE TABLE course_sessions (
     id bigserial PRIMARY KEY,
     number varchar(4),
-    course_id bigint UNIQUE REFERENCES courses(course_id) NOT NULL,
-    time text NOT NULL
+    course_id bigint REFERENCES courses(course_id) NOT NULL,
+    time text NOT NULL,
+    number_students int NOT NULL
 );
 
 
 CREATE TABLE user_sessions (
-    student_id smallint REFERENCES users(id),
-    session_id smallint REFERENCES course_sessions(id)
+    student_id bigint REFERENCES users(id),
+    session_id bigint REFERENCES course_sessions(id),
+    CONSTRAINT user_session_key PRIMARY KEY (student_id, session_id)
 );
 
-INSERT INTO users(email, password, role, first_name, last_name) VALUES ('dev@dev.com', 'qwerty', 'teacher', 'John', 'Cena'),('student@student.com', 'student12345', 'student', 'Morty', 'Smith')
+CREATE TABLE assignments (
+    assignment_id bigserial UNIQUE PRIMARY KEY,
+    assignment_name text NOT NULL,
+    points_earned int,
+    points_available int NOT NULL,
+    instructions text NOT NULL,
+    completed BOOLEAN,
+    student_id int REFERENCES users(id)
+);
+
+INSERT INTO users(email, password, role, first_name, last_name) 
+VALUES 
+('dev@dev.com', 'qwerty', 'teacher', 'John', 'Cena'),
+('student@student.com', 'student12345', 'student', 'Morty', 'Smith'),
+('rick@rnm', 'qwerty', 'student', 'Rick', 'Sanchez');
+
+INSERT INTO courses(course_number,course_name, description, teacher_id) 
+VALUES 
+('3000', 'Git', 'Learning to use Git', 1),
+('8675', 'Yes', 'A class on positivity and good vibes', 1);

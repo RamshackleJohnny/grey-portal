@@ -3,7 +3,6 @@ import functools
 from flask import Flask, render_template, request, session, redirect, url_for, g, flash, abort
 
 import psycopg2
-import psycopg2.extras
 
 def page_not_found(e):
 	return render_template('404.html')
@@ -31,6 +30,7 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
+
     from . import db
     db.init_app(app)
 
@@ -41,10 +41,10 @@ def create_app(test_config=None):
         if user_id is None:
             g.user = None
         else:
-            log = db.get_db()
-            cursor = log.cursor()
-            cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
-            g.user = cursor.fetchone()
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute('SELECT * FROM users WHERE id = %s', (user_id,))
+                    g.user = cur.fetchone()
 
     @app.route('/', methods=['GET', 'POST'])
     def index():
@@ -52,31 +52,76 @@ def create_app(test_config=None):
 
     @app.route('/dashboard', methods=['GET', 'POST'])
     def dash():
-        if request.method == 'GET':
-            database = db.get_db()
-            cursor = database.cursor()
-            cursor.execute("SELECT * FROM users WHERE role = 'student';")
-            students = cursor.fetchall()
-
-            print(students)
-            return render_template('dash.html', students=students)
-
-        if request.method == 'POST':
-            database = db.get_db()
-            cursor = database.cursor()
-            add_student = request.form['add_student']
-            # remove_student = request.form['remove_student']
-            cursor.execute("SELECT (id, email) FROM users WHERE role = 'student' AND email = %s;", (add_student,))
-            # cursor.execute("SELECT (id, %s) FROM users WHERE role = 'student';", (remove_student))
-            return render_template('dash.html', add_student=add_student)
-
 
         return render_template('dash.html')
+
+    @app.route('/sessions', methods=['GET', 'POST'])
+    def sessions():
+        if request.method == 'POST' or request.method == 'GET':
+        # List all the students in the database
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("SELECT * FROM users WHERE role = 'student';")
+                    students = cur.fetchall()
+                    # List course name from the database
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("SELECT course_name, course_id FROM courses;")
+                    course_name = cur.fetchall()
+                    cur.execute("SELECT course_id FROM courses;")
+                    course_id = cur.fetchall()
+
+            # List course ID from the database
+            sessions = {}
+            course_ids = []
+
+            for it in course_id:
+                with db.get_db() as con:
+                    with con.cursor() as cur:
+                        cur.execute("SELECT * FROM course_sessions where course_id = %s;", (it))
+                        course_list = cur.fetchall()
+                        tostring = str(it)
+                        oneout = tostring.replace('[', '')
+                        twoout= oneout.replace(']', '')
+                        course_ids.append(twoout)
+                        sessions.update( {twoout : course_list})
+
+
+                        # List sessions in the database
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("SELECT * FROM course_sessions;")
+
+        if request.method == 'POST':
+            # Info from form field
+            courses_name = request.form['courses_name']
+            course_session_number = request.form['course_session_number']
+            course_session_id = request.form.get('course_session_id', type=int)
+            session_time = request.form['session_time']
+            number_students = request.form['number_students']
+            # Executions and Fetch for course_session_cursor
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("SELECT * FROM courses WHERE course_name = %s ;", (courses_name,))
+                    cour = cur.fetchone()
+
+            # Insert session info into database
+            try:
+                with db.get_db() as con:
+                    with con.cursor() as cur:
+                        cur.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour[0], number_students, session_time))
+                        con.commit()
+                        flash("Your session was added. You may now add students to this session using the directory.")
+            except:
+                flash("We could not add this session. Check the name and try again.")
+            return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students,students=students, course_list=course_list, course_name=course_name, sessions=sessions, course_ids=course_ids)
+
 
     from . import courses
     app.register_blueprint(courses.bp)
 
     from . import auth
     app.register_blueprint(auth.bp)
+
 
     return app

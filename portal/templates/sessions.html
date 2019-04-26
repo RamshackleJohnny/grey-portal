@@ -1,0 +1,66 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+{% block content %}
+
+<div class="bordered" style="width: 600px; max-height:400px; overflow-y:scroll;">
+  <p>list of students</p>
+  <ul>
+      {% for student in students %}
+      <li>id: {{ student[0] }} {{ student[2] }} {{ student[3] }}</li>
+      {% endfor %}
+    </ul>
+
+    <p>List of Courses and Sessions</p>
+    <ul>
+        {% for course in course_name %}
+        <h2>{{ course[0] }}</h2>
+          {% for session in sessions[course[1]|string] %}
+            <li>Session ID: {{ session[0] }}</li>
+            <li>Course ID: {{ session[1] }} </li>
+            <li>Time: {{ session[3] }} </li>
+            <li>Number of Students: {{ session[4] }} </li>
+            {% if g.user['role']=='teacher' %}<br />
+            <a class="fa fa-trash" href="{{ url_for('delete_course', id=session[0]) }}"></a>
+            <a class="fa fa-pencil-square-o" href="{{ url_for('update_session',id=session[0]) }}"></a>
+          {% endif %}
+            <hr>
+            {% endfor %}
+          {% endfor %}
+    </ul>
+</div>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <p class="flashes">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<form method="POST">
+    <p>Enter the following information to create a course session</p>
+    <p>Course Name:</p>
+    <label for="courses_name">
+        <input type="text" name="courses_name">
+    </label>
+
+    <p>Course Number (4 - Digits):</p>
+    <label for="course_session_number">
+        <input type="text" name="course_session_number">
+    </label>
+    <p>Session Time:</p>
+    <label for="session_time">
+        <input type="text" name="session_time">
+    </label>
+    <p>Number of students:</p>
+    <label for="number_students">
+        <input type="number" name="number_students">
+    </label>
+    <label for="submit">
+        <input type="submit" name="submit">
+    </label>
+
+</form>
+
+
+{% endblock %}

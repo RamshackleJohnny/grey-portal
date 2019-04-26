@@ -11,7 +11,7 @@
   {% endif %}
 {% endwith %}
   <section class="flexbox">
-    {% if g.user[5]=='teacher' %}
+    {% if g.user['role']=='teacher' %}
     <div class="bordered">
     <form method='POST' action="/create-course">
       <label for="coursename">

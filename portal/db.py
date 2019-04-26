@@ -1,5 +1,6 @@
 import os
 import psycopg2
+from psycopg2.extras import DictCursor
 
 import click
 from flask import current_app, g
@@ -11,11 +12,12 @@ def get_db():
         # open a connection, save it to close when done
         DB_URL = os.environ.get('DATABASE_URL', None)
         if DB_URL:
-            g.db = psycopg2.connect(DB_URL, sslmode='require')
+            g.db = psycopg2.connect(DB_URL, sslmode='require', cursor_factory=DictCursor)
         else:
             g.db = psycopg2.connect(
-                f"dbname={current_app.config['DB_NAME']}" +
-                f" user={current_app.config['DB_USER']}"
+                dbname=current_app.config['DB_NAME'],
+                user=current_app.config['DB_USER'],
+                cursor_factory=DictCursor
             )
 
     return g.db
