@@ -44,7 +44,6 @@ def sessions():
         with get_db() as con:
             with con.cursor() as cur:
                 cur.execute("SELECT * FROM course_sessions;")
-        return render_template('sessions.html', students=students, course_name=course_name, course_id = course_id, sessions=sessions)
 
     if request.method == 'POST':
         # Info from form field
@@ -69,3 +68,88 @@ def sessions():
         except:
             flash("We could not add this session. Check the name and try again.")
         return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students,students=students, course_list=course_list, course_name=course_name, sessions=sessions, course_ids=course_ids)
+    return render_template('sessions.html', students=students, course_name=course_name, course_id = course_id, sessions=sessions)
+
+@bp.route('/update-session', methods=['GET', 'POST'])
+def update_session():
+    with get_db() as con:
+        with con.cursor() as cur:
+            cur.execute("SELECT id FROM course_sessions")
+            sesh_ids = cur.fetchall()
+
+    thepeople = {}
+    sessions = {}
+    session_ids = []
+    for it in sesh_ids:
+        with get_db() as con:
+            with con.cursor() as cur:
+                # join this table to users table to display specific user's info
+                cur.execute("SELECT student_id FROM user_sessions WHERE session_id = %s;", (it))
+                course_list = cur.fetchall()
+                newest = []
+                for item in course_list:
+                    tostring = str(item)
+                    oneout = tostring.replace('[', '')
+                    twoout= oneout.replace(']', '')
+                    newest.append(twoout)
+        sessions[f'{it[0]}'] = newest
+        #print(sessions)
+        for names in course_list:
+            with get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("SELECT first_name, last_name FROM users where id = %s;", (names))
+                    namelist = cur.fetchall()
+                    #print(namelist)
+                    newestlist = []
+                    for item in namelist:
+                        print(item[1])
+                        newestlist.extend(item)
+                    thepeople[f'{names[0]}'] = newestlist
+            print(thepeople)
+
+
+
+
+    # List all from users with the role 'student'
+    with get_db() as con:
+        with con.cursor() as cur:
+            cur.execute("SELECT * FROM users WHERE role = 'student';")
+            students = cur.fetchall()
+
+    # List all from course_sessions
+    with get_db() as con:
+        with con.cursor() as cur:
+            cur.execute("SELECT * FROM course_sessions ORDER BY course_id ASC;")
+            course_sessions = cur.fetchall()
+
+    # List all from user_sessions
+    with get_db() as con:
+        with con.cursor() as cur:
+            cur.execute("SELECT * FROM user_sessions;")
+            user_sessions = cur.fetchall()
+
+    # Join table for user_sessions and users
+    with get_db() as con:
+        with con.cursor() as cur:
+            cur.execute("SELECT id, first_name, last_name FROM users users LEFT JOIN user_sessions us ON users.id = us.student_id ORDER BY id ASC;")
+            students_in_sessions = cur.fetchall()
+            #print(students_in_sessions)
+
+    if request.method == 'POST':
+
+
+        student_id = request.form['student_id']
+        session_id = request.form['session_id']
+
+        # before inserting these values, check that this pair of values ins't already in the user_sessions table
+
+
+        with get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("INSERT INTO user_sessions (student_id, session_id) VALUES (%s,%s); ", (student_id, session_id))
+                con.commit()
+
+
+        return render_template('update-session.html',thepeople=thepeople, course_sessions=course_sessions,user_sessions=user_sessions,session_id=session_id, student_id=student_id, students=students, sessions=sessions, session_ids=session_ids)
+
+    return render_template('update-session.html',thepeople=thepeople, students=students, course_sessions=course_sessions, user_sessions=user_sessions, session_students=students_in_sessions,sessions=sessions, session_ids=session_ids)
