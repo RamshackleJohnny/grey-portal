@@ -46,13 +46,6 @@ CREATE TABLE assignments (
     instructions text NOT NULL,
     completed BOOLEAN,
 
-INSERT INTO users(email, password, role, first_name, last_name) 
-VALUES 
-('dev@dev.com', 'qwerty', 'teacher', 'John', 'Cena'),
-('student@student.com', 'student12345', 'student', 'Morty', 'Smith'),
-('rick@rnm', 'qwerty', 'student', 'Rick', 'Sanchez');
 
-INSERT INTO courses(course_number,course_name, description, teacher_id) 
-VALUES 
-('3000', 'Git', 'Learning to use Git', 1),
-('8675', 'Yes', 'A class on positivity and good vibes', 1);
+INSERT INTO users(email, password, role, first_name, last_name) VALUES ('dev@dev.com', 'qwerty', 'teacher', 'John', 'Cena'),('student@student.com', 'student12345', 'student', 'Morty', 'Smith');
+INSERT INTO courses(course_number,course_name, description, teacher_id) VALUES ('3000', 'Git', 'Learning to use Git', 1),('8675', 'Yes', 'A class on positivity and good vibes', 1);
