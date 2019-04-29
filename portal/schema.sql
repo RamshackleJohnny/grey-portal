@@ -44,5 +44,5 @@ CREATE TABLE assignments (
     points_earned int,
     points_available int NOT NULL,
     instructions text NOT NULL,
-    completed BOOLEAN,
-
+    completed BOOLEAN
+ );
