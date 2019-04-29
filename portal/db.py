@@ -52,6 +52,26 @@ def add_user():
     cur.close()
 
 
+def default_users():
+    db = get_db()
+    cur = db.cursor()
+    user_email = 'dev@dev.com'
+    user_password = 'qwerty'
+    user_role= 'teacher'
+    user_first = 'Teachy'
+    user_last = 'McTeachface'
+    cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
+    db.commit()
+    user_email = 'stu@stu.com'
+    user_password = 'stu'
+    user_role= 'student'
+    user_first = 'Study'
+    user_last = 'McStudent'
+    cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
+    db.commit()
+    cur.close()
+
+
 @click.command('init-db')
 @with_appcontext
 def init_db_command():
@@ -66,7 +86,15 @@ def add_user_command():
     add_user()
     click.echo('Created user.')
 
+@click.command('defaults')
+@with_appcontext
+def default_users_command():
+    """Adds Default Testing Users"""
+    default_users()
+    click.echo('Created default users.')
+
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
     app.cli.add_command(add_user_command)
+    app.cli.add_command(default_users_command)
