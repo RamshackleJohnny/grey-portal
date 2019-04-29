@@ -16,8 +16,8 @@ CREATE TABLE users (
 -- Teacher has courses
 CREATE TABLE courses (
     course_id bigserial PRIMARY KEY,
-    course_number text NOT NULL,
-    course_name text NOT NULL,
+    course_number text UNIQUE NOT NULL,
+    course_name text UNIQUE NOT NULL,
     description text NOT NULL,
     teacher_id bigserial NOT NULL REFERENCES users(id)
 );
@@ -33,12 +33,11 @@ CREATE TABLE course_sessions (
 );
 
 CREATE TABLE user_sessions (
-    student_id smallint REFERENCES users(id),
-    session_id smallint REFERENCES course_sessions(id)
+    student_id bigint REFERENCES users(id),
+    session_id bigint REFERENCES course_sessions(id),
+    CONSTRAINT user_session_key PRIMARY KEY (student_id, session_id)
 );
 
--- Grades handled python side --
--- Type of assignment? --
 CREATE TABLE assignments (
     assignment_id bigserial UNIQUE PRIMARY KEY,
     assignment_name text NOT NULL,
@@ -46,10 +45,14 @@ CREATE TABLE assignments (
     points_available int NOT NULL,
     instructions text NOT NULL,
     completed BOOLEAN,
-    session_name int REFERENCES course_sessions(id),
-    student_id int REFERENCES users(id)
-);
 
-INSERT INTO users(email, password, role, first_name, last_name) VALUES ('dev@dev.com', 'qwerty', 'teacher', 'John', 'Cena'),('student@student.com', 'student12345', 'student', 'Morty', 'Smith');
+INSERT INTO users(email, password, role, first_name, last_name) 
+VALUES 
+('dev@dev.com', 'qwerty', 'teacher', 'John', 'Cena'),
+('student@student.com', 'student12345', 'student', 'Morty', 'Smith'),
+('rick@rnm', 'qwerty', 'student', 'Rick', 'Sanchez');
 
-INSERT INTO courses(course_number,course_name, description, teacher_id) VALUES ('3000', 'Git', 'Learning to use Git', 1),('8675', 'Yes', 'A class on positivity and good vibes', 1);
+INSERT INTO courses(course_number,course_name, description, teacher_id) 
+VALUES 
+('3000', 'Git', 'Learning to use Git', 1),
+('8675', 'Yes', 'A class on positivity and good vibes', 1);

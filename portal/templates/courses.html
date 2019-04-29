@@ -13,29 +13,36 @@
   <section class="flexbox">
     {% if g.user['role']=='teacher' %}
     <div class="bordered">
-    <form method="POST">
-      Course Name: <input type="text" name="coursename" required><br />
-      Course Code: <input type="text" name="coursenumber" required><br />
-      Course Description: <textarea name="coursedesc" required cols="35" maxlength="100"></textarea><br />
-      <label for="submit">
-          <input type="submit" name="submit">
+    <form method='POST' action="/create-course">
+      <label for="coursename">
+      Course Name:
       </label>
+       <input type="text" name="coursename" required><br />
+      <label for="coursenumber">
+      Course Code:
+      </label>
+    <input type="text" name="coursenumber" required><br />
+      <label for="coursedesc">
+      Course Description:
+      </label>
+    <textarea name="coursedesc" required cols="35" maxlength="100"></textarea><br />
+    <input type="submit" name="submit">
     </form>
   </div>
   {% endif %}
   <div class="bordered" style="width: 600px; max-height:400px; overflow-y:scroll;">
     <h2>Course Directory</h2>
       {% for class in all_courses %}
-        <h3>{{ class['course_id'] }}</h3>
+        <h3>{{ class[0] }} <b>({{ class[4] }})</b></h3>
         Teacher: {% for people in all_teachers  %}
                   {% if class[2] == people[2] %}
                       {{ people [1] }}, {{ people[0] }}
                   {% endif %}
                 {% endfor %}<br />
-        <i>{{ class[1] }}</i>
-        {% if class[2] == g.user[0] %}<br />
-            <a class="fa fa-trash" href="{{ url_for('delete_course', id=class[3]) }}"></a> <a class="fa fa-pencil-square-o" href="{{ url_for('update_course', id=class[3]) }}"></a>
-          {% endif %}
+        <i>{{ class[1] }}</i><br />
+        {% if g.user[0] == class[2] %}
+          <a class="fa fa-trash" href="{{ url_for('courses.delete_course', id=class[3]) }}" name="delete-course"></a> <a class="fa fa-pencil-square-o" href="{{ url_for('courses.update_course', id=class[3]) }}" name="update-course"></a>
+        {% endif %}
         <hr />
       {% endfor %}
   </div>
