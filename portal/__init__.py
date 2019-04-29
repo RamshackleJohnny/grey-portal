@@ -65,4 +65,41 @@ def create_app(test_config=None):
     app.register_blueprint(auth.bp)
 
 
+    @app.route('/assignments', methods=['GET', 'POST'])
+    def assignment_page():
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("SELECT assignment_name, points_earned, points_available, instructions, completed FROM assignments ORDER BY assignment_name ASC")
+                all_assignments = cur.fetchall()
+                cur.execute("SELECT first_name, last_name, id FROM users WHERE role='teacher'")
+                all_teachers = cur.fetchall()
+        if request.method== 'POST':
+            assign_name = request.form['assign-name']
+            points_ttl = request.form['points-avb']
+            instructions = request.form['instructions']
+            session = request.form['session']
+            with db.get_db() as con:
+                with con.cursor() as cur:
+                    cur.execute("INSERT INTO assignments (assignment_name, points_available, instructions, completed, session_name) VALUES (%s,%s,%s,%s,%s);", (assign_name, points_ttl, instructions, False,session ))
+                    con.commit()
+            return redirect(url_for('assignment_page'))
+        return render_template('assignments.html', all_assignments = all_assignments)
+
+    def get_assignment(id):
+        print('It gives me',id)
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute('SELECT assignment_name FROM assignments WHERE assignment_id = %s', [id])
+                assignment = cur.fetchone()
+        return assignment
+
+    @app.route('/<id>/assignment-delete', methods=('POST','GET'))
+    def delete_assignment(id):
+        get_assignment(id)
+        with db.get_db() as con:
+            with con.cursor() as cur:
+                cur.execute('DELETE FROM assignments WHERE assignment_id = %s',[id])
+                con.commit()
+        return redirect(url_for('course_page'))
+
     return app
