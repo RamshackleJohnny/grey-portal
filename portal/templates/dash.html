@@ -4,34 +4,4 @@
 
 {% block content %}
 
-<p>list of students</p>
-<ul>
-    {% for student in students %}
-    <li>id: {{ student[0] }} {{ student[2] }} {{ student[3] }}</li>
-    {% endfor %}
-</ul>
-<p>list of courses</p>
-<ul>
-    {% for course_lists in course_list %}
-    <li>{{ course_lists }}</li>
-    {% endfor %}
-</ul>
-<p>course sessions</p>
-<ul>
-    {% for sessions in cour %}
-    <li>{{ sessions }}</li>
-    {% endfor %}
-</ul>
-<!-- <form method="GET">
-    <fieldset>
-        <label>Select session</label>
-        <select>
-            {% for courses in cour %}
-            <option value = "{{ courses }}">{{ courses }}</option>
-            {% endfor %}
-        </select>
-    </fieldset>
-</form> -->
-
-
 {% endblock %}

@@ -6,31 +6,50 @@
 {% if g.user[5]=='teacher' %}
 <form method='POST'>
   Assignment name: <input type="text" name="assign-name" required><br />
-  Points Available: <input type="number" name="points-avb"><br />
+  Points Available: <input type="number" name="points-avb" required><br />
   Instructions: <textarea name="instructions" required cols="35"></textarea> <br />
-  Session: <select name="session">
-      <option value="1">1</option>
+  Due date: <input type="text" name="due_date" required><br/>
+  <label for="session_id">Session:</label>
+  <select id="session_id" name="session_id">
+    {% for class in classes %}
+    {% for session in sessions[class] %}
+    <option value="{{ session[0] }}">{{ session[5] }} (Session ID: {{ session[0] }})</option>
+    {% endfor %}
+    {% endfor %}
   </select>
   <label for="submit">
       <input type="submit" name="submit">
   </label>
 </form>
 {% endif %}
+
+{% if g.user[5]=='teacher' %}<br />
 <div class="bordered" style="width: 600px; max-height:400px; overflow-y:scroll;">
   <h2>Assignments:</h2>
-    {% for items in all_assignments %}
-      <h3>{{ items[0] }}</h3>
-      <!-- Teacher: {% for people in all_teachers  %} -->
-                <!-- {% if item[2] == people[2] %} -->
-                    <!-- {{ people [1] }}, {{ people[0] }} -->
-                <!-- {% endif %} -->
-              <!-- {% endfor %}<br /> -->
-      <i>{{ items[1] }}/{{ items[2] }}</i>
-      <p>{{ items[3] }}</p>
+    {% for items in teach_assignments %}
+      <h3>{{ items[1] }}</h3>
+      <i>{{ items[2] }}/{{ items[3] }}</i>
+      <p>{{ items[4] }}</p>
+      <p>{{ items[5] }}</p>
       {% if g.user[5]=='teacher' %}<br />
-          <a class="fa fa-trash" href="{{ url_for('delete_assignment', id=items[-1]) }}"></a> <a class="fa fa-pencil-square-o" href="{{ url_for('delete_assignment', id=items[-1]) }}"></a>
+          <a class="fa fa-trash" href="{{ url_for('assign.delete_assignment', id=items[0]) }}"></a>
+          <a class="fa fa-pencil-square-o" href="{{ url_for('assign.update_assignment',id=items[0]) }}"></a>
         {% endif %}
       <hr />
     {% endfor %}
 </div>
+{% endif %}
+
+{% if g.user[5]=='student' %}<br />
+<div class="bordered" style="width: 600px; max-height:400px; overflow-y:scroll;">
+  <h2>Assignments:</h2>
+    {% for items in student_assignments %}
+      <h3>{{ items[0] }}</h3>
+      <i>{{ items[1] }}/{{ items[2] }}</i>
+      <p>{{ items[3] }}</p>
+      <p>{{ items[4] }}</p>
+      <hr />
+    {% endfor %}
+</div>
+{% endif %}
 {% endblock %}

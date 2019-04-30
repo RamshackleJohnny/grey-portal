@@ -36,6 +36,7 @@
     {% endfor %}
   {% endif %}
 {% endwith %}
+{% if g.user[5]=='teacher' %}<br />
 <form method="POST">
     <p>Enter the following information to create a course session</p>
     <p>Course Name:</p>
@@ -60,6 +61,6 @@
     </label>
 
 </form>
-
+{% endif %}
 
 {% endblock %}
