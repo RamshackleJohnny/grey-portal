@@ -23,7 +23,7 @@ def assignment_page():
             for tc in students_classes:
                 with get_db() as con:
                     with con.cursor() as cur:
-                        cur.execute("SELECT assignment_name, points_earned, points_available, instructions, sesh_id FROM assignments WHERE sesh_id  = %s", (tc[1],))
+                        cur.execute("SELECT assignment_name, points_earned, points_available, instructions, due_date, sesh_id FROM assignments WHERE sesh_id  = %s", (tc[1],))
                         student_assignments = cur.fetchall()
             session_list = {}
             class_list = []
@@ -42,7 +42,7 @@ def assignment_page():
                         for cla in class_list:
                             with get_db() as con:
                                 with con.cursor() as cur:
-                                    cur.execute("SELECT assignment_id, assignment_name, points_earned, points_available, instructions, sesh_id FROM assignments WHERE sesh_id  = %s", (cla,))
+                                    cur.execute("SELECT assignment_id, assignment_name, points_earned, points_available, instructions, due_date, sesh_id FROM assignments WHERE sesh_id  = %s", (cla,))
                                     teach_assignments = cur.fetchall()
 
 

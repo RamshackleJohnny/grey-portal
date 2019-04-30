@@ -41,12 +41,16 @@
     <p>Enter the following information to create a course session</p>
     <p>Course Name:</p>
     <label for="courses_name">
-        <input type="text" name="courses_name">
+        <select id="courses_name" name="courses_name">
+        {% for cour in course_name %}
+           <option value="{{ cour[0] }}">{{ cour[0] }}</option>
+         {% endfor %}
+         </select>
     </label>
 
     <p>Course Number (4 - Digits):</p>
     <label for="course_session_number">
-        <input type="text" name="course_session_number">
+        <input type="number" name="course_session_number">
     </label>
     <p>Session Time:</p>
     <label for="session_time">

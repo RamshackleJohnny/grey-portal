@@ -10,6 +10,12 @@ bp = Blueprint('sessions', __name__)
 
 @bp.route('/sessions', methods=['GET', 'POST'])
 def sessions():
+    number_students=[]
+    session_time = []
+    course_session_id = []
+    course_session_number = []
+    courses_name = []
+    cour = []
     if request.method == 'POST' or request.method == 'GET':
     # List all the students in the database
         with get_db() as con:
@@ -21,6 +27,7 @@ def sessions():
             with con.cursor() as cur:
                 cur.execute("SELECT course_name, course_id FROM courses;")
                 course_name = cur.fetchall()
+                print(course_name)
                 cur.execute("SELECT course_id FROM courses;")
                 course_id = cur.fetchall()
 
@@ -67,8 +74,8 @@ def sessions():
                     flash("Your session was added. You may now add students to this session using the directory.")
         except:
             flash("We could not add this session. Check the name and try again.")
-        return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students,students=students, course_list=course_list, course_name=course_name, sessions=sessions, course_ids=course_ids)
-    return render_template('sessions.html', students=students, course_name=course_name, course_id = course_id, sessions=sessions)
+        return redirect(url_for('sessions.sessions'))
+    return render_template('sessions.html',  course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students,students=students, course_list=course_list, course_name=course_name, sessions=sessions, course_ids=course_ids)
 
 @bp.route('/update-session', methods=['GET', 'POST'])
 def update_session():
