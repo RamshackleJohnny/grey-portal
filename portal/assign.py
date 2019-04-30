@@ -9,13 +9,21 @@ bp = Blueprint('assign', __name__)
 
 @bp.route('/assignments', methods=['GET', 'POST'])
 def assignment_page():
+    student_assignments = []
+    teach_assignments = []
     with get_db() as con:
         with con.cursor() as cur:
             this_teach = g.user[0]
-            cur.execute("SELECT assignment_name, points_earned, points_available, instructions, sesh_id FROM assignments ORDER BY assignment_name ASC")
-            all_assignments = cur.fetchall()
             cur.execute("SELECT course_id, course_name FROM courses WHERE teacher_id = %s;", (this_teach,))
             thier_classes = cur.fetchall()
+            cur.execute("SELECT student_id,session_id FROM user_sessions WHERE student_id = %s;", (this_teach,))
+            students_classes = cur.fetchall()
+            for tc in students_classes:
+                with get_db() as con:
+                    with con.cursor() as cur:
+                        cur.execute("SELECT assignment_name, points_earned, points_available, instructions, sesh_id FROM assignments WHERE sesh_id  = %s", (tc[1],))
+                        student_assignments = cur.fetchall()
+                        print(student_assignments)
             session_list = {}
             class_list = []
             for cl in thier_classes:
@@ -30,6 +38,11 @@ def assignment_page():
                         session_list.update( {twoout : thier_sessions})
                         for sesh in thier_sessions:
                             sesh.append(cl[1])
+                        for cla in class_list:
+                            with get_db() as con:
+                                with con.cursor() as cur:
+                                    cur.execute("SELECT assignment_name, points_earned, points_available, instructions, sesh_id FROM assignments WHERE sesh_id  = %s", (cla,))
+                                    teach_assignments = cur.fetchall()
 
 
     if request.method== 'POST':
@@ -43,7 +56,7 @@ def assignment_page():
                 cur.execute("INSERT INTO assignments (assignment_name, points_available, instructions, due_date, sesh_id) VALUES (%s,%s,%s,%s,%s);", (assign_name, points_ttl, instructions, duedate, session ))
                 con.commit()
         return redirect(url_for('assign.assignment_page'))
-    return render_template('assignments.html', all_assignments = all_assignments, classes=class_list, sessions=session_list)
+    return render_template('assignments.html', teach_assignments = teach_assignments, student_assignments = student_assignments, classes=class_list, sessions=session_list)
 
 def get_assignment(id):
     print('It gives me',id)

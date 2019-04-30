@@ -22,10 +22,11 @@
   </label>
 </form>
 {% endif %}
+
 {% if g.user[5]=='teacher' %}<br />
 <div class="bordered" style="width: 600px; max-height:400px; overflow-y:scroll;">
   <h2>Assignments:</h2>
-    {% for items in all_assignments %}
+    {% for items in teach_assignments %}
       <h3>{{ items[0] }}</h3>
       <i>{{ items[1] }}/{{ items[2] }}</i>
       <p>{{ items[3] }}</p>
@@ -37,10 +38,11 @@
     {% endfor %}
 </div>
 {% endif %}
+
 {% if g.user[5]=='student' %}<br />
 <div class="bordered" style="width: 600px; max-height:400px; overflow-y:scroll;">
   <h2>Assignments:</h2>
-    {% for items in all_assignments %}
+    {% for items in student_assignments %}
       <h3>{{ items[0] }}</h3>
       <i>{{ items[1] }}/{{ items[2] }}</i>
       <p>{{ items[3] }}</p>
