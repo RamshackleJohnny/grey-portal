@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+
+
+{% block content %}
+<ul>
+    {% for schedule_list in schedule_list %}
+    <li>{{ schedule_list }}</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

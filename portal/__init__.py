@@ -64,5 +64,8 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
+    from . import schedule
+    app.register_blueprint(schedule.bp)
+
 
     return app
