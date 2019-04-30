@@ -36,13 +36,34 @@ To run the application locally, you need a running instance of PostgreSQL. Creat
 (venv) $ flask init-db
 ```
 
-When you run this command, it will initialize the database and add 2 default users of a teacher and a student. Their credentials are as follows:
+When you run this command, it will initialize the database. Run the following command to add 2 teachers and 5 students to the database for mock data.
+
+```bash
+(venv) $ flask defaults
+```
+
+Their credentials are as follows:
 
 **User**: dev@dev.com
 **Password**: qwerty
 
-**User**: student@student.com
-**Password**: student12345
+**User**: teacher@teacher.com
+**Password**: teacher123
+
+**User**: stu@stu.com
+**Password**: student1
+
+**User**: morty@stu.com
+**Password**: student2
+
+**User**: jerry@stu.com
+**Password**: student3
+
+**User**: michael@stu.com
+**Password**: student4
+
+**User**: bichael@stu.com
+**Password**: student5
 
 If you want to run tests, you'll have to create a second database according to the configuration in `tests/conftest.py`.
 
