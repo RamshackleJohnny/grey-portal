@@ -38,8 +38,9 @@ def test_login(client, app):
                 course = cur.fetchone()
                 assert course is None
 
-def test_dash(client):
+def test_dash(client, auth):
     response= client.get('/dashboard')
+    auth.login()
     assert response.status_code==200
 
     # Later on this will change.
