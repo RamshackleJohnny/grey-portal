@@ -27,6 +27,7 @@ def sessions():
             with con.cursor() as cur:
                 cur.execute("SELECT course_name, course_id FROM courses;")
                 course_name = cur.fetchall()
+                print(course_name)
                 cur.execute("SELECT course_id FROM courses;")
                 course_id = cur.fetchall()
 
