@@ -44,5 +44,6 @@ CREATE TABLE assignments (
     points_earned int,
     points_available int NOT NULL,
     instructions text NOT NULL,
-    completed BOOLEAN
+    due_date text NOT NULL,
+    sesh_id bigserial NOT NULL REFERENCES course_sessions(id)
  );
