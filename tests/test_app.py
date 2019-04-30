@@ -44,3 +44,6 @@ def test_dash(client, auth):
     assert response.status_code==200
 
     # Later on this will change.
+def test_logout(client):
+    response=client.get('/logout')
+    assert response.status_code==302

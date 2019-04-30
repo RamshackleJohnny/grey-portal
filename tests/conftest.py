@@ -41,7 +41,7 @@ class AuthActions(object):
     def __init__(self, client):
         self._client = client
 
-    def login(self, email='dev@dev.com', password='qwerty'):
+    def login(self, email='s@s', password='s'):
         print("Logging in.")
         return self._client.post(
             '/auth/login',

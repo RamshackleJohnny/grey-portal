@@ -15,7 +15,7 @@ def test_test_page(client):
 def test_course_page(client, auth):
     response= client.get('/courses')
     auth.login()
-    assert b'<section class="bordered">' in response.data
+    assert b"<title>Redirecting...</title>" in response.data
     assert response.status_code==302
 
 def test_update_course(client, auth):
