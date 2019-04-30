@@ -23,8 +23,3 @@ def test_update_course(client):
 def test_delete_course(client):
     response= client.get('/1/course-delete')
     assert response.status_code==302
-
-# TODO: Test get_course. -Danny.
-def test_get_course(id):
-    id=1
-    assert course

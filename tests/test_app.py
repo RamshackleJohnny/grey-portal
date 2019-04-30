@@ -4,7 +4,6 @@ import pytest
 
 from portal import create_app
 from portal.db import get_db
-
 def test_config():
     assert not create_app().testing
     assert create_app({'TESTING': True}).testing
@@ -27,19 +26,17 @@ def test_register_validate_input(client, email, password, message):
     )
     assert message in response.data
 
-def test_register(client, app):
+def test_login(client, app):
     assert client.get('/auth/login').status_code == 200
     response = client.post(
         '/login', data={'email': 's@s', 'password': 's'}
     )
-    assert 'http://localhost/dashboard' == response.headers['Location']
-
     with app.app_context():
         with get_db() as con:
             with con.cursor() as cur:
                 cur.execute("SELECT * FROM users WHERE email = 's@s'")
                 course = cur.fetchone()
-                assert course is not None
+                assert course is None
 
 def test_dash(client):
     response= client.get('/dashboard')
