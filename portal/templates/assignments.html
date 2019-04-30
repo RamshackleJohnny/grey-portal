@@ -27,12 +27,13 @@
 <div class="bordered" style="width: 600px; max-height:400px; overflow-y:scroll;">
   <h2>Assignments:</h2>
     {% for items in teach_assignments %}
-      <h3>{{ items[0] }}</h3>
-      <i>{{ items[1] }}/{{ items[2] }}</i>
-      <p>{{ items[3] }}</p>
+      <h3>{{ items[1] }}</h3>
+      <i>{{ items[2] }}/{{ items[3] }}</i>
       <p>{{ items[4] }}</p>
+      <p>{{ items[5] }}</p>
       {% if g.user[5]=='teacher' %}<br />
-          <a class="fa fa-trash" href="{{ url_for('assign.delete_assignment', id=items[3]) }}"></a>
+          <a class="fa fa-trash" href="{{ url_for('assign.delete_assignment', id=items[0]) }}"></a>
+          <a class="fa fa-pencil-square-o" href="{{ url_for('assign.update_assignment',id=items[0]) }}"></a>
         {% endif %}
       <hr />
     {% endfor %}
