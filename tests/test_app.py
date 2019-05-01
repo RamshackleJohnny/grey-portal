@@ -11,7 +11,6 @@ def test_config():
 def test_index(client):
     response = client.get('/')
     assert b'<h1>TSCT Portal</h1>' in response.data
-    assert b'<form action="login" method="post">' in response.data
     # There is NO nav bar if we're not logged in.
     assert b'<nav>' not in response.data
 
@@ -21,7 +20,7 @@ def test_index(client):
 ))
 def test_register_validate_input(client, email, password, message):
     response = client.post(
-        '/login',
+        '/',
         data={'email': email, 'password': password}
     )
     assert message in response.data
@@ -29,7 +28,7 @@ def test_register_validate_input(client, email, password, message):
 def test_login(client, app):
     assert client.get('/auth/login').status_code == 200
     response = client.post(
-        '/login', data={'email': 's@s', 'password': 's'}
+        '/', data={'email': 's@s', 'password': 's'}
     )
     with app.app_context():
         with get_db() as con:
@@ -37,11 +36,6 @@ def test_login(client, app):
                 cur.execute("SELECT * FROM users WHERE email = 's@s'")
                 course = cur.fetchone()
                 assert course is None
-
-def test_dash(client, auth):
-    response= client.get('/dashboard')
-    auth.login()
-    assert response.status_code==200
 
     # Later on this will change.
 def test_logout(client):

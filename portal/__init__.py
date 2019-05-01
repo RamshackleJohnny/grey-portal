@@ -46,14 +46,14 @@ def create_app(test_config=None):
                     cur.execute('SELECT * FROM users WHERE id = %s', (user_id,))
                     g.user = cur.fetchone()
 
-    @app.route('/', methods=['GET', 'POST'])
-    def index():
-        return render_template('index.html')
-
-    @app.route('/dashboard', methods=['GET', 'POST'])
-    def dash():
-
-        return render_template('dash.html')
+    # @app.route('/', methods=['GET', 'POST'])
+    # def index():
+    #     return render_template('index.html')
+	#
+    # @app.route('/dashboard', methods=['GET', 'POST'])
+    # def dash():
+	#
+    #     return render_template('dash.html')
 
     from . import sessions
     app.register_blueprint(sessions.bp)

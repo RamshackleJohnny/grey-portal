@@ -3,9 +3,11 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
+
+{% if not g.user %}
 <p>{{ unauthorized }}
 <p>{{ wrong }}</p>
-  <form action="login" method="post">
+  <form method="post">
     <label for="email">Email
       <input type="email" name="email" />
     </label>
@@ -14,4 +16,7 @@
     </label>
     <input type="submit" value="Login" />
   </form>
+  {% else %}
+<h2>Logged in</h2>
+  {% endif %}
 {% endblock %}
