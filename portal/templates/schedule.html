@@ -6,8 +6,11 @@
 
 {% block content %}
 <ul>
-    {% for schedule_list in schedule_list %}
-    <li>{{ schedule_list }}</li>
+    {% for session in schedule_list %}
+    <h2>Course Name: {{ session[0] }}</h2>
+    <li>Session: {{ session[3] }}</li>
+    <li>Time: {{ session[1] }}</li>
+    <li>Description: {{ session[2] }}</li>
     {% endfor %}
 </ul>
 
