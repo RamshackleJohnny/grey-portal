@@ -27,7 +27,6 @@ def sessions():
             with con.cursor() as cur:
                 cur.execute("SELECT course_name, course_id FROM courses;")
                 course_name = cur.fetchall()
-                print(course_name)
                 cur.execute("SELECT course_id FROM courses;")
                 course_id = cur.fetchall()
 
@@ -157,6 +156,6 @@ def update_session():
                 con.commit()
 
 
-        return render_template('update-session.html',thepeople=thepeople, course_sessions=course_sessions,user_sessions=user_sessions,session_id=session_id, student_id=student_id, students=students, sessions=sessions, session_ids=session_ids)
+        return redirect(url_for('sessions.update_session'))
 
     return render_template('update-session.html',thepeople=thepeople, students=students, course_sessions=course_sessions, user_sessions=user_sessions, session_students=students_in_sessions,sessions=sessions, session_ids=session_ids)
