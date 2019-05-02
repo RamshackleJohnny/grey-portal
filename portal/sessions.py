@@ -3,12 +3,14 @@ import functools
 from flask import Flask, render_template, request, session, redirect, url_for, g, flash, abort, Blueprint
 import psycopg2
 import psycopg2.extras
+from .auth import login_required, teacher_required
 
 from portal.db import get_db
 
 bp = Blueprint('sessions', __name__)
 
 @bp.route('/sessions', methods=['GET', 'POST'])
+@login_required
 def sessions():
     number_students=[]
     session_time = []
@@ -75,6 +77,8 @@ def sessions():
     return render_template('sessions.html',  course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, cour=cour, number_students=number_students,students=students, course_name=course_name, sessions=sessions, course_ids=course_ids)
 
 @bp.route('/update-session', methods=['GET', 'POST'])
+@login_required
+@teacher_required
 def update_session():
     with get_db() as con:
         with con.cursor() as cur:
