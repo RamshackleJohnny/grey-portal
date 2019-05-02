@@ -3,7 +3,7 @@ import functools
 from portal.db import get_db
 import psycopg2
 import psycopg2.extras
-from .auth import login_required
+from .auth import login_required, teacher_required
 
 bp = Blueprint('assign', __name__)
 
@@ -69,6 +69,7 @@ def get_assignment(id):
 
 @bp.route('/<id>/assignment-delete', methods=('POST','GET'))
 @login_required
+@teacher_required
 def delete_assignment(id):
     get_assignment(id)
     with get_db() as con:
@@ -79,6 +80,7 @@ def delete_assignment(id):
 
 @bp.route('/<id>/assignment-update', methods=['GET', 'POST'])
 @login_required
+@teacher_required
 def update_assignment(id):
     assignment = get_assignment(id)
     if assignment is None:
