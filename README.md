@@ -48,22 +48,22 @@ Their credentials are as follows:
 **Password**: qwerty
 
 **User**: teacher@teacher.com
-**Password**: teacher123
+**Password**: qwerty
 
 **User**: stu@stu.com
-**Password**: student1
+**Password**: qwerty
 
 **User**: morty@stu.com
-**Password**: student2
+**Password**: qwerty
 
 **User**: jerry@stu.com
-**Password**: student3
+**Password**: qwerty
 
 **User**: michael@stu.com
-**Password**: student4
+**Password**: qwerty
 
 **User**: bichael@stu.com
-**Password**: student5
+**Password**: qwerty
 
 If you want to run tests, you'll have to create a second database according to the configuration in `tests/conftest.py`.
 

@@ -26,7 +26,6 @@ CREATE TABLE courses (
 -- When we get into the code, just check roles.-Danny
 CREATE TABLE course_sessions (
     id bigserial PRIMARY KEY,
-    number varchar(4),
     course_id bigint REFERENCES courses(course_id) NOT NULL,
     time text NOT NULL,
     number_students int NOT NULL
