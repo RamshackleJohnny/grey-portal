@@ -46,3 +46,9 @@ CREATE TABLE assignments (
     due_date text NOT NULL,
     sesh_id bigserial NOT NULL REFERENCES course_sessions(id)
  );
+
+ CREATE TABLE user_assignments (
+     point_earned int,
+     assignment_id bigserial NOT NULL REFERENCES assignments(assignment_id),
+     student_id bigserial NOT NULL REFERENCES users(id)
+ );
