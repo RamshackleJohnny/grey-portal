@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for, g, flash, abort, Blueprint
 
 from .db import get_db
-from .auth import login_required
+from .auth import login_required, teacher_required
 
 bp = Blueprint('courses', __name__)
 
@@ -11,6 +11,7 @@ def test_page():
 
 @bp.route('/create-course', methods=['GET', 'POST'])
 @login_required
+@teacher_required
 def create_course():
     if not g.user[5]=='teacher':
        return abort(403)
@@ -57,6 +58,7 @@ def get_course(id):
 
 @bp.route('/<id>/course-delete', methods=('POST','GET'))
 @login_required
+@teacher_required
 def delete_course(id):
     course = get_course(id)
     if not g.user[0] == course[4]:
@@ -72,6 +74,7 @@ def delete_course(id):
 
 @bp.route('/<id>/course-update', methods=['GET', 'POST'])
 @login_required
+@teacher_required
 def update_course(id):
     course = get_course(id)
     if course is None:
