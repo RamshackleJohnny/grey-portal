@@ -3,6 +3,13 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <p class="flashes">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 <form method="post">
   <fieldset>
       <label for="student_id">Select student</label>
@@ -14,7 +21,7 @@
       <label for="session_id">Select course session</label>
       <select id="session_id" name="session_id">
         {% for course_sessions in course_sessions %}
-        <option value="{{ course_sessions[0] }}">ID: {{ course_sessions[2] }} Time: {{ course_sessions[3] }} # of students: {{ course_sessions[4] }}</option>
+        <option value="{{ course_sessions[0] }}">ID: {{ course_sessions[1] }} Time: {{ course_sessions[2] }} # of students: {{ course_sessions[3] }}</option>
         {% endfor %}
       </select>
       <label for="submit">
@@ -28,10 +35,10 @@
   {% for course_sessions in course_sessions %}
   <li>Session ID: {{ course_sessions[0] }}</li>
   <ul>
-    <li>Number of students: {{ course_sessions[4] }}</li>
+    <li>Number of students: {{ course_sessions[3] }}</li>
   </ul>
     <ul>
-      <li>Time: {{ course_sessions[3] }}</li>
+      <li>Time: {{ course_sessions[2] }}</li>
     </ul>
 
   {% endfor %}
