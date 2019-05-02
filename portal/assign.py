@@ -39,12 +39,7 @@ def assignment_page():
                         session_list.update( {twoout : thier_sessions})
                         for sesh in thier_sessions:
                             sesh.append(cl[1])
-                        for cla in class_list:
-                            with get_db() as con:
-                                with con.cursor() as cur:
-                                    cur.execute("SELECT assignment_id, assignment_name, points_earned, points_available, instructions, due_date, sesh_id FROM assignments WHERE sesh_id  = %s", (cla,))
-                                    teach_assignments = cur.fetchall()
-
+                        teach_assignments = teachers_assignments(class_list)
 
     if request.method== 'POST':
         assign_name = request.form['assign-name']
@@ -60,7 +55,6 @@ def assignment_page():
     return render_template('assignments.html', teach_assignments = teach_assignments, student_assignments = student_assignments, classes=class_list, sessions=session_list)
 
 def get_assignment(id):
-    print('It gives me',id)
     with get_db() as con:
         with con.cursor() as cur:
             cur.execute('SELECT assignment_name , points_available, instructions, due_date FROM assignments WHERE assignment_id = %s', [id])
@@ -97,3 +91,11 @@ def update_assignment(id):
                 con.commit()
         return redirect(url_for('assign.assignment_page'))
     return render_template('update-assignment.html', assignment=assignment)
+
+def teachers_assignments(class_list):
+    for cla in class_list:
+        with get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("SELECT assignment_id, assignment_name, points_earned, points_available, instructions, due_date, sesh_id FROM assignments WHERE sesh_id  = %s", (cla,))
+                teach_assignment = cur.fetchall()
+                return teach_assignment
