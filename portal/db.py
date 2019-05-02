@@ -63,45 +63,45 @@ def default_users():
     cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
     db.commit()
     user_email = 'teacher@teacher.com'
-    user_password = 'teacher123'
+    user_password = 'qwerty'
     user_role= 'teacher'
     user_first = 'Rick'
     user_last = 'Sanchez'
     cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
     db.commit()
     user_email = 'stu@stu.com'
-    user_password = 'student1'
+    user_password = 'qwerty'
     user_role= 'student'
     user_first = 'Study'
     user_last = 'McStudent'
     cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
     db.commit()
     user_email = 'morty@stu.com'
-    user_password = 'student2'
+    user_password = 'qwerty'
     user_role= 'student'
     user_first = 'Morty'
     user_last = 'Smith'
     cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
     db.commit()
     user_email = 'jerry@stu.com'
-    user_password = 'student3'
+    user_password = 'qwerty'
     user_role= 'student'
     user_first = 'Jerry'
     user_last = 'Smith'
     cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
     db.commit()
     user_email = 'michael@stu.com'
-    user_password = 'student4'
+    user_password = 'qwerty'
     user_role= 'student'
     user_first = 'Michael'
     user_last = 'Withab'
     cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
     db.commit()
-    user_email = 'bichael@stu.com'
-    user_password = 'student5'
+    user_email = 'learnin@stu.com'
+    user_password = 'qwerty'
     user_role= 'student'
-    user_first = 'Bichael'
-    user_last = 'Withab'
+    user_first = 'Learnin'
+    user_last = 'Tocode'
     cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
     db.commit()
     course_name = 'Git'
