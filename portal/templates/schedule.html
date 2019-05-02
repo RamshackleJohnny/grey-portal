@@ -1,0 +1,17 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}TSCT Portal{% endblock %}
+
+
+
+{% block content %}
+<ul>
+    {% for session in schedule_list %}
+    <h2>Course Name: {{ session[0] }}</h2>
+    <li>Session: {{ session[3] }}</li>
+    <li>Time: {{ session[1] }}</li>
+    <li>Description: {{ session[2] }}</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

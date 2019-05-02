@@ -5,6 +5,9 @@
     <li><a href="{{ url_for('courses.course_page') }}">Courses</a></li>
     <li><a href="{{ url_for('dash') }}">Dashboard</a></li>
     <li><a href="{{ url_for('sessions.sessions') }}">Sessions</a></li>
+    {% if g.user['role']=='student' %}
+    <li><a href="{{ url_for('schedule.schedule') }}">Schedule</a></li>
+    {% endif %}
     <li><a href="{{ url_for('assign.assignment_page') }}">Assignments</a></li>
     <li><a href="{{ url_for('auth.log_out') }}">Log Out</a></li>
   </ul>
