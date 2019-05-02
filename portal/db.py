@@ -104,6 +104,21 @@ def default_users():
     user_last = 'Withab'
     cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
     db.commit()
+    course_name = 'Git'
+    course_desc = 'Basics of Git, including workflow'
+    course_num = '8675'
+    cursor.execute("INSERT INTO courses (course_name, description, course_number, teacher_id) VALUES (%s, %s, %s, %s)", (course_name, course_desc, course_num, 1))
+    db.commit()
+    course_name = 'SoundCloud Rapping'
+    course_desc = "Danny would be mad at me if I didn't put this in"
+    course_num = '3090'
+    cursor.execute("INSERT INTO courses (course_name, description, course_number, teacher_id) VALUES (%s, %s, %s, %s)", (course_name, course_desc, course_num, 1))
+    db.commit()
+    course_name = 'Yes'
+    course_desc = 'A class on positivity'
+    course_num = '0666'
+    cursor.execute("INSERT INTO courses (course_name, description, course_number, teacher_id) VALUES (%s, %s, %s, %s)", (course_name, course_desc, course_num, 1))
+    db.commit()
     cur.close()
 
 @click.command('init-db')
