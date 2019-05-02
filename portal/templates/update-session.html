@@ -3,6 +3,13 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <p class="flashes">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 <form method="post">
   <fieldset>
       <label for="student_id">Select student</label>
