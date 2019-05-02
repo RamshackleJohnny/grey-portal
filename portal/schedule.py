@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, session, redirect, url_for, g, flash, abort, Blueprint
 
 from .db import get_db
-from .auth import login_required
+from .auth import login_required, student_required
 
 bp = Blueprint('schedule', __name__)
 
 @bp.route("/schedule", methods=['GET', 'POST'])
 @login_required
+@student_required
 def schedule():
     
     current_student = g.user[0]
