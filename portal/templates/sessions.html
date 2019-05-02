@@ -18,9 +18,8 @@
         <h2>{{ course[0] }}</h2>
           {% for session in sessions[course[1]|string] %}
             <li>Session ID: {{ session[0] }}</li>
-            <li>Course ID: {{ session[1] }} </li>
-            <li>Time: {{ session[3] }} </li>
-            <li>Number of Students: {{ session[4] }} </li>
+            <li>Time: {{ session[2] }} </li>
+            <li>Number of Students: {{ session[3] }} </li>
             {% if g.user['role']=='teacher' %}<br />
             <a class="fa fa-pencil-square-o" href="{{ url_for('sessions.update_session',id=session[0]) }}"></a>
           {% endif %}
@@ -46,11 +45,6 @@
            <option value="{{ cour[0] }}">{{ cour[0] }}</option>
          {% endfor %}
          </select>
-    </label>
-
-    <p>Course Number (4 - Digits):</p>
-    <label for="course_session_number">
-        <input type="number" name="course_session_number">
     </label>
     <p>Session Time:</p>
     <label for="session_time">
