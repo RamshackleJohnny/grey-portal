@@ -9,7 +9,7 @@
   <p>list of students</p>
   <ul>
       {% for student in students %}
-      <li>id: {{ student[0] }} {{ student[2] }} {{ student[3] }}</li>
+      <li>{{ student[2] }} {{ student[3] }} (ID: {{ student[0] }})</li>
       {% endfor %}
     </ul>
 
