@@ -3,13 +3,21 @@ import functools
 from flask import Flask, render_template, request, session, redirect, url_for, g, flash, abort, Blueprint
 import psycopg2
 import psycopg2.extras
+from .auth import login_required, teacher_required
 
 from portal.db import get_db
 
 bp = Blueprint('sessions', __name__)
 
 @bp.route('/sessions', methods=['GET', 'POST'])
+@login_required
 def sessions():
+    number_students=[]
+    session_time = []
+    course_session_id = []
+    course_session_number = []
+    courses_name = []
+    cour = []
     if request.method == 'POST' or request.method == 'GET':
     # List all the students in the database
         with get_db() as con:
@@ -48,8 +56,6 @@ def sessions():
     if request.method == 'POST':
         # Info from form field
         courses_name = request.form['courses_name']
-        course_session_number = request.form['course_session_number']
-        course_session_id = request.form.get('course_session_id', type=int)
         session_time = request.form['session_time']
         number_students = request.form['number_students']
         # Executions and Fetch for course_session_cursor
@@ -62,15 +68,17 @@ def sessions():
         try:
             with get_db() as con:
                 with con.cursor() as cur:
-                    cur.execute("INSERT INTO course_sessions (number, course_id, number_students, time) VALUES (%s,%s,%s,%s);", (course_session_number, cour[0], number_students, session_time))
+                    cur.execute("INSERT INTO course_sessions (course_id, number_students, time) VALUES (%s,%s,%s);", (cour[0], number_students, session_time))
                     con.commit()
                     flash("Your session was added. You may now add students to this session using the directory.")
         except:
             flash("We could not add this session. Check the name and try again.")
-        return render_template('sessions.html', course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, course_session_number=course_session_number, cour=cour, number_students=number_students,students=students, course_list=course_list, course_name=course_name, sessions=sessions, course_ids=course_ids)
-    return render_template('sessions.html', students=students, course_name=course_name, course_id = course_id, sessions=sessions)
+        return redirect(url_for('sessions.sessions'))
+    return render_template('sessions.html',  course_session_id=course_session_id, session_time=session_time, courses_name=courses_name, cour=cour, number_students=number_students,students=students, course_name=course_name, sessions=sessions, course_ids=course_ids)
 
 @bp.route('/update-session', methods=['GET', 'POST'])
+@login_required
+@teacher_required
 def update_session():
     with get_db() as con:
         with con.cursor() as cur:
@@ -150,6 +158,6 @@ def update_session():
                 con.commit()
 
 
-        return render_template('update-session.html',thepeople=thepeople, course_sessions=course_sessions,user_sessions=user_sessions,session_id=session_id, student_id=student_id, students=students, sessions=sessions, session_ids=session_ids)
+        return redirect(url_for('sessions.update_session'))
 
     return render_template('update-session.html',thepeople=thepeople, students=students, course_sessions=course_sessions, user_sessions=user_sessions, session_students=students_in_sessions,sessions=sessions, session_ids=session_ids)

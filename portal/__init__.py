@@ -67,5 +67,7 @@ def create_app(test_config=None):
     from . import schedule
     app.register_blueprint(schedule.bp)
 
+    from . import assign
+    app.register_blueprint(assign.bp)
 
     return app
