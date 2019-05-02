@@ -13,7 +13,7 @@
   <select id="session_id" name="session_id">
     {% for class in classes %}
     {% for session in sessions[class] %}
-    <option value="{{ session[0] }}">{{ session[5] }} (Session ID: {{ session[0] }})</option>
+    <option value="{{ session[0] }}">{{ session[4] }} (Session ID: {{ session[0] }})</option>
     {% endfor %}
     {% endfor %}
   </select>
