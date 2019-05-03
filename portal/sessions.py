@@ -113,7 +113,6 @@ def update_session():
                         print(item[1])
                         newestlist.extend(item)
                     thepeople[f'{names[0]}'] = newestlist
-            print(thepeople)
 
 
 
@@ -150,12 +149,19 @@ def update_session():
         session_id = request.form['session_id']
 
         # before inserting these values, check that this pair of values ins't already in the user_sessions table
-
-
         with get_db() as con:
             with con.cursor() as cur:
-                cur.execute("INSERT INTO user_sessions (student_id, session_id) VALUES (%s,%s); ", (student_id, session_id))
-                con.commit()
+                cur.execute("SELECT * FROM user_sessions WHERE student_id = %s AND session_id = %s;", (student_id, session_id))
+                theyin = cur.fetchall()
+                print(theyin)
+            if theyin == []:
+                with get_db() as con:
+                    with con.cursor() as cur:
+                        cur.execute("INSERT INTO user_sessions (student_id, session_id) VALUES (%s,%s); ", (student_id, session_id))
+                        con.commit()
+            else:
+                flash(f"This student is already in this session.")
+
 
 
         return redirect(url_for('sessions.update_session'))
