@@ -12,4 +12,20 @@
       <input type="submit" name="submit">
   </label>
 </form>
+
+<form method="POST">
+  
+  <label for="assignments">
+    Assignment: <input type="text" name="assignments" value="{{ student_assignments }}">
+  </label>
+  <label for="students">
+    Students: <input type="text" name="students" value="{{ classes }}">
+  </label>
+  <label for="grade">
+    Grade: <input type="text" name="grades" value="">
+
+  </label>
+
+  
+</form>
 {% endblock %}
