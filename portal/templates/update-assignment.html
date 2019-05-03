@@ -13,19 +13,19 @@
   </label>
 </form>
 
+{% for students in session %}
 <form method="POST">
-  
-  <label for="assignments">
-    Assignment: <input type="text" name="assignments" value="{{ student_assignments }}">
-  </label>
   <label for="students">
-    Students: <input type="text" name="students" value="{{ classes }}">
+      Student: {{ student }}
+  </label>
+  <label for="points">
+    Points Earned: <input type="text" name="assignments" value="{{ PE }}"> <p>/ {{ PT }}</p>
   </label>
   <label for="grade">
-    Grade: <input type="text" name="grades" value="">
+    Grade: {{ math_done }}
 
   </label>
+{% endfor %}
 
-  
 </form>
 {% endblock %}
