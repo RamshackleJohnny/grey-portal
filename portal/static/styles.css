@@ -79,7 +79,7 @@ label input {
 .bordered{
   border: 1px solid black;
   padding: 0 10px;
-  width: 100vw;
+  width: 95vw;
   /* max-width: 80vw; */
 }
 .dashboard-wrapper{
@@ -110,4 +110,8 @@ textarea{
   height: 150px;
   resize: none;
   display: block;
+}
+
+.centered{
+  margin: 0 auto;
 }
