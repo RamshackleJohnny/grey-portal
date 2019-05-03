@@ -52,8 +52,15 @@ def create_app(test_config=None):
 
     @app.route('/dashboard', methods=['GET', 'POST'])
     def dash():
-
-        return render_template('dash.html')
+        news=[
+		{'title': 'Textbook Returns/Buybacks', 'body': 'The Grant Textbook Returns/Buybacks will be held in the Library Lobby beginning May 06 to May 08 from 9:00am to 6:00pm. Please bring your Student ID. All student grant Technical Program textbooks must be returned to your instructor before leaving the campus. All student grant General Education books must be returned to the Library before leaving campus or your account will be charged the average used book cost of the book.'},
+		{'title': 'Community Service Deadline', 'body': 'The deadline for community service is on May 06, 2019. Please turn in your 10 hours of community service by 4:30 pm on that day or talk to our coordinator about an extension.'},
+		{'title': 'Commencement 2019', 'body': 'Sophmores, make sure to pay any outstanding balances on your account before May 09, 2019. Any student with outstanding balances will not be allowed to walk at graduation.'},
+		{'title': 'Grant Cars', 'body': 'Thaddeus has partnered with local dealerships to get students cars well below retail prices to get their first cars. Talk to Financial Aid to determine eligibility.'},
+		{'title': 'Thaddeus Wins Award', 'body': 'Thaddeus won an award from the state for excellence in teaching and diversity. Thank you for being amazing, students.'},
+		{'title': 'Alumni Dinner', 'body': 'Class of 1969 is having their Alumni banquet at the Alumni house on April 28 2019. Parking in the Kreider Lot will not be available April 27-April 28, 2019.'},
+		]
+        return render_template('dash.html', news=news)
 
     from . import sessions
     app.register_blueprint(sessions.bp)
