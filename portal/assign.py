@@ -58,8 +58,7 @@ def assignment_page():
         for students in students_assigned:
             with get_db() as con:
                  with con.cursor() as cur:
-                    print(students)
-                    cur.execute("INSERT INTO user_assignments (assignment_id,student_id) VALUES (%s,%s);", (aid, students[0]))
+                    cur.execute("INSERT INTO user_assignments (assignment_id,student_id) VALUES (%s,%s);", (aid[0][0], students[0]))
                     con.commit()
         return redirect(url_for('assign.assignment_page'))
     return render_template('assignments.html', teach_assignments = teach_assignments, student_assignments = student_assignments, classes=class_list, sessions=session_list)
@@ -78,6 +77,8 @@ def delete_assignment(id):
     get_assignment(id)
     with get_db() as con:
         with con.cursor() as cur:
+            cur.execute('DELETE FROM user_assignments WHERE assignment_id = %s',[id])
+            con.commit()
             cur.execute('DELETE FROM assignments WHERE assignment_id = %s',[id])
             con.commit()
     return redirect(url_for('assign.assignment_page'))
@@ -91,7 +92,14 @@ def update_assignment(id):
         print(f"User {g.user[0]} is attempting to edit an assignment that doesn't exist.")
         return abort(404)
     if request.method== 'POST':
-        update_assignment_info()
+        assign_name = request.form['assign-name']
+        points_ttl = request.form['points-avb']
+        instructions = request.form['instructions']
+        duedate = request.form['due_date']
+        with get_db() as con:
+            with con.cursor() as cur:
+                cur.execute("UPDATE assignments SET assignment_name = %s, points_available = %s, instructions = %s, due_date = %s WHERE assignment_id  = %s", (assign_name,points_ttl,instructions,duedate,id, ))
+                con.commit()
         return redirect(url_for('assign.assignment_page'))
     return render_template('update-assignment.html', assignment=assignment)
 
@@ -102,16 +110,6 @@ def teachers_assignments(class_list):
                 cur.execute("SELECT assignment_id, assignment_name, points_earned, points_available, instructions, due_date, sesh_id FROM assignments WHERE sesh_id  = %s", (cla,))
                 teach_assignment = cur.fetchall()
                 return teach_assignment
-
-def update_assignment_info():
-    assign_name = request.form['assign-name']
-    points_ttl = request.form['points-avb']
-    instructions = request.form['instructions']
-    duedate = request.form['due_date']
-    with get_db() as con:
-        with con.cursor() as cur:
-            cur.execute("UPDATE assignments SET assignment_name = %s, points_available = %s, instructions = %s, due_date = %s WHERE assignment_id  = %s", (assign_name,points_ttl,instructions,duedate,id, ))
-            con.commit()
 
 def input_grades():
     points_earned = request.form['']
