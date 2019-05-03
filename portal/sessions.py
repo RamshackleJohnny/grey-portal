@@ -11,6 +11,7 @@ bp = Blueprint('sessions', __name__)
 
 @bp.route('/sessions', methods=['GET', 'POST'])
 @login_required
+@teacher_required
 def sessions():
     number_students=[]
     session_time = []

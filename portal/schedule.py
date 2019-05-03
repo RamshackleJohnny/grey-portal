@@ -9,16 +9,19 @@ bp = Blueprint('schedule', __name__)
 @login_required
 @student_required
 def schedule():
-    
+
     current_student = g.user[0]
 
-    
+
     # List of schedule for student
     with get_db() as con:
         with con.cursor() as cur:
-            cur.execute("SELECT course_name, time, description, session_id FROM user_sessions u_s JOIN course_sessions c_s ON c_s.id = u_s.session_id JOIN courses courses ON courses.course_id = c_s.course_id WHERE student_id = %s;", (current_student,))
+            cur.execute("SELECT course_name, time, description, session_id, teacher_id FROM user_sessions u_s JOIN course_sessions c_s ON c_s.id = u_s.session_id JOIN courses courses ON courses.course_id = c_s.course_id WHERE student_id = %s;", (current_student,))
             schedule_list = cur.fetchall()
-
-    
-    return render_template('schedule.html', schedule_list=schedule_list)
-            
+            print(schedule_list)
+        # Can I make it find the teacher too? We'll see!! -Danny
+        connection = get_db()
+        cursor = connection.cursor()
+        cursor.execute("SELECT first_name, last_name, id  FROM users WHERE role='teacher'")
+        all_teachers = cursor.fetchall()
+    return render_template('schedule.html', schedule_list=schedule_list, all_teachers=all_teachers)

@@ -91,9 +91,11 @@ label input {
 }
 
 nav{
-  width: 80vw;
+  width: 90vw;
   padding: 10px;
-  border: 1px solid black;
+  color: white;
+  /* border: 1px solid black; */
+  background: #8b1e41;
   margin: 0 auto;
 }
 
@@ -106,6 +108,11 @@ nav ul li{
   display: inline-block;
 }
 
+nav a{
+  color: white;
+  text-decoration: none;
+}
+
 textarea{
   height: 150px;
   resize: none;
@@ -114,4 +121,21 @@ textarea{
 
 .centered{
   margin: 0 auto;
+}
+
+
+/* TABLE STYLING */
+th {
+  background: #8b1e41;
+  color:white;
+  font-size: 1.3rem;
+}
+td{
+  border-bottom: 1px solid black;
+}
+
+table{
+  width: 95vw;
+  text-align: center;
+  border-collapse: collapse;
 }
