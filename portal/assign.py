@@ -91,8 +91,10 @@ def update_assignment(id):
     grades = {}
     with get_db() as con:
         with con.cursor() as cur:
-            cur.execute('SELECT point_earned, assignment_id, student_id FROM user_assignments WHERE assignment_id = %s', [id])
+            cur.execute('SELECT point_earned, assignment_id, student_id FROM user_assignments WHERE assignment_id = %s;', [id])
             yes = cur.fetchall()
+            cur.execute('SELECT points_available FROM assignments WHERE assignment_id = %s;', [id])
+            possible = cur.fetchone()
     for students in yes:
         with get_db() as con:
             with con.cursor() as cur:
@@ -101,6 +103,7 @@ def update_assignment(id):
                 cur.execute('SELECT point_earned FROM user_assignments WHERE student_id = %s', (students[2],))
                 earned = cur.fetchone()
                 people.extend(earned)
+                people.extend(possible)
                 grades[f'{students[2]}'] = people
     if assignment is None:
         print(f"User {g.user[0]} is attempting to edit an assignment that doesn't exist.")
