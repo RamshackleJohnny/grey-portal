@@ -104,8 +104,6 @@ def update_assignment(id):
                 earned = cur.fetchone()
                 people.extend(earned)
                 people.extend(possible)
-                grade_value = earned / possible
-                people.extend(grade_value)
                 grades[f'{students[2]}'] = people
     if assignment is None:
         print(f"User {g.user[0]} is attempting to edit an assignment that doesn't exist.")
