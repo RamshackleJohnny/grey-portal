@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS courses CASCADE;
 DROP TABLE IF EXISTS assignments CASCADE;
 DROP TABLE IF EXISTS course_sessions CASCADE;
 DROP TABLE IF EXISTS user_sessions CASCADE;
+DROP TABLE IF EXISTS user_assignments CASCADE;
 
 CREATE TABLE users (
     id bigserial PRIMARY KEY,
