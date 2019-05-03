@@ -1,6 +1,7 @@
 import functools
 
 from flask import Flask, render_template, request, session, redirect, url_for, g, flash, abort, Blueprint
+from werkzeug.security import check_password_hash, generate_password_hash
 import psycopg2
 import psycopg2.extras
 
@@ -49,14 +50,18 @@ def login():
         password = request.form['password']
         log = get_db()
         cursor = log.cursor()
-        cursor.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email,password,))
+        cursor.execute("SELECT * FROM users WHERE email = %s", [email])
         userdata = cursor.fetchone()
-        wrong = 'Username or password is incorrect'
+        print(userdata)
         if userdata == None:
+            wrong = 'That user doesn\'t exist.'
+            return render_template('index.html', wrong=wrong)
+        elif not check_password_hash(userdata[4], password):
+            wrong = 'Incorrect password.'
             return render_template('index.html', wrong=wrong)
         else:
             dict_cur = log.cursor(cursor_factory=psycopg2.extras.DictCursor)
-            dict_cur.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email,password,))
+            dict_cur.execute("SELECT * FROM users WHERE email = %s", [email])
             sesh = dict_cur.fetchone()
             session.clear()
             session['user_id'] = sesh['id']
