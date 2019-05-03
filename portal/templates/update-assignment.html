@@ -12,11 +12,11 @@
       <input type="submit" name="submit">
   </label>
 </form>
-
-{% for students in session %}
+{% for ah in ahhh%}
+{% for student in grades %}
 <form method="POST">
   <label for="students">
-      Student: {{ student }}
+      Student: {{ student[0] }} {{ student[1] }}
   </label>
   <label for="points">
     Points Earned: <input type="text" name="assignments" value="{{ PE }}"> <p>/ {{ PT }}</p>
@@ -25,6 +25,8 @@
     Grade: {{ math_done }}
 
   </label>
+  <hr>
+{% endfor %}
 {% endfor %}
 
 </form>
