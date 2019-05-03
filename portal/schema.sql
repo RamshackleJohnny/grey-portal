@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS courses CASCADE;
 DROP TABLE IF EXISTS assignments CASCADE;
 DROP TABLE IF EXISTS course_sessions CASCADE;
 DROP TABLE IF EXISTS user_sessions CASCADE;
+DROP TABLE IF EXISTS user_assignments CASCADE;
 
 CREATE TABLE users (
     id bigserial PRIMARY KEY,
@@ -45,4 +46,10 @@ CREATE TABLE assignments (
     instructions text NOT NULL,
     due_date text NOT NULL,
     sesh_id bigserial NOT NULL REFERENCES course_sessions(id)
+ );
+
+ CREATE TABLE user_assignments (
+     point_earned int,
+     assignment_id bigserial NOT NULL REFERENCES assignments(assignment_id),
+     student_id bigserial NOT NULL REFERENCES users(id)
  );

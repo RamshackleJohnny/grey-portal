@@ -8,8 +8,20 @@
   Points Available: <input value="{{ assignment[1] }}" type="number" name="points-avb" required><br />
   Instructions: <input value="{{ assignment[2] }}" name="instructions" required cols="35"> <br />
   Due date: <input value="{{ assignment[3] }}"type="text" name="due_date" required><br/>
-  <label for="submit">
-      <input type="submit" name="submit">
+    <hr>
+{% for key, values in grades.items() %}
+  <label for="students">
+      Student: {{ values[0] }} {{ values[1] }}
   </label>
+  <label for="points">
+    Points Earned: <input type="text" name="earned" value="{{ values[2] }}"> <p>/ {{ values[3] }}</p>
+  </label>
+  <input type="text" hidden name="student" value="{{ key }}">
+    <hr>
+{% endfor %}
+<label for="submit">
+    <input type="submit" name="submit">
+</label>
 </form>
+
 {% endblock %}
