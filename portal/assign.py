@@ -89,13 +89,10 @@ def delete_assignment(id):
 def update_assignment(id):
     assignment = get_assignment(id)
     grades = {}
-    stu = []
     with get_db() as con:
         with con.cursor() as cur:
             cur.execute('SELECT point_earned, assignment_id, student_id FROM user_assignments WHERE assignment_id = %s', [id])
             yes = cur.fetchall()
-            cur.execute('SELECT student_id FROM user_assignments WHERE assignment_id = %s', [id])
-            stu = cur.fetchall()
     for students in yes:
         with get_db() as con:
             with con.cursor() as cur:
@@ -105,7 +102,6 @@ def update_assignment(id):
                 earned = cur.fetchone()
                 people.extend(earned)
                 grades[f'{students[2]}'] = people
-    print(stu)
     if assignment is None:
         print(f"User {g.user[0]} is attempting to edit an assignment that doesn't exist.")
         return abort(404)
@@ -119,7 +115,7 @@ def update_assignment(id):
                 cur.execute("UPDATE assignments SET assignment_name = %s, points_available = %s, instructions = %s, due_date = %s WHERE assignment_id  = %s", (assign_name,points_ttl,instructions,duedate,id, ))
                 con.commit()
         return redirect(url_for('assign.assignment_page'))
-    return render_template('update-assignment.html', assignment=assignment, grades = grades, ahhh = stu)
+    return render_template('update-assignment.html', assignment=assignment, grades = grades)
 
 def teachers_assignments(class_list):
     for cla in class_list:
