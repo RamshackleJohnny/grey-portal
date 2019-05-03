@@ -58,7 +58,7 @@ def assignment_page():
         for students in students_assigned:
             with get_db() as con:
                  with con.cursor() as cur:
-                    cur.execute("INSERT INTO user_assignments (assignment_id,student_id) VALUES (%s,%s);", (aid[0][0], students[0]))
+                    cur.execute("INSERT INTO user_assignments (point_earned , assignment_id,student_id) VALUES (%s,%s,%s);", (0, aid[0][0], students[0]))
                     con.commit()
         return redirect(url_for('assign.assignment_page'))
     return render_template('assignments.html', teach_assignments = teach_assignments, student_assignments = student_assignments, classes=class_list, sessions=session_list)
@@ -117,6 +117,7 @@ def update_assignment(id):
             with con.cursor() as cur:
                 cur.execute("UPDATE assignments SET assignment_name = %s, points_available = %s, instructions = %s, due_date = %s WHERE assignment_id  = %s", (assign_name,points_ttl,instructions,duedate,id, ))
                 con.commit()
+            input_grades(id)
         return redirect(url_for('assign.assignment_page'))
     return render_template('update-assignment.html', assignment=assignment, grades = grades)
 
@@ -128,10 +129,11 @@ def teachers_assignments(class_list):
                 teach_assignment = cur.fetchall()
                 return teach_assignment
 
-def input_grades():
-    points_earned = request.form['']
-    student = request.form['']
+def input_grades(id):
+    points_earned = request.form['earned']
+    student = request.form['student']
     with get_db() as con:
         with con.cursor() as cur:
-            cur.execute("UPDATE assignments SET assignment_name = %s, points_available = %s, instructions = %s, due_date = %s WHERE assignment_id  = %s", (assign_name,points_ttl,instructions,duedate,id, ))
+            print(student)
+            cur.execute("UPDATE user_assignments SET point_earned = %s  WHERE student_id = %s AND assignment_id  = %s", (points_earned,student,id, ))
             con.commit()
