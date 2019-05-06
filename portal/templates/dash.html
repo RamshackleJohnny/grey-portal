@@ -3,7 +3,15 @@
 {% block title %}TSCT Portal{% endblock %}
 
 {% block content %}
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/L8b8lMRh0pg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
+<h2>News</h2>
+<section class="bordered centered" style="padding:10px;">
+  {% for thing in news %}
+    <h3>{{ thing['title'] }}</h3>
+    <div>{{ thing['body'] }}</div>
+    {% if not loop.last %}
+      <hr/>
+      <br/>
+    {% endif %}
+  {% endfor %}
+</section>
 {% endblock %}

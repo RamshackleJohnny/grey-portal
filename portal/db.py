@@ -5,6 +5,7 @@ from psycopg2.extras import DictCursor
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
+from werkzeug.security import generate_password_hash
 
 
 def get_db():
@@ -56,49 +57,49 @@ def default_users():
     db = get_db()
     cur = db.cursor()
     user_email = 'dev@dev.com'
-    user_password = 'qwerty'
+    user_password = generate_password_hash('qwerty')
     user_role= 'teacher'
     user_first = 'Teachy'
     user_last = 'McTeachface'
     cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
     db.commit()
     user_email = 'teacher@teacher.com'
-    user_password = 'qwerty'
+    user_password = generate_password_hash('qwerty')
     user_role= 'teacher'
     user_first = 'Rick'
     user_last = 'Sanchez'
     cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
     db.commit()
     user_email = 'stu@stu.com'
-    user_password = 'qwerty'
+    user_password = generate_password_hash('qwerty')
     user_role= 'student'
     user_first = 'Study'
     user_last = 'McStudent'
     cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
     db.commit()
     user_email = 'morty@stu.com'
-    user_password = 'qwerty'
+    user_password = generate_password_hash('qwerty')
     user_role= 'student'
     user_first = 'Morty'
     user_last = 'Smith'
     cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
     db.commit()
     user_email = 'jerry@stu.com'
-    user_password = 'qwerty'
+    user_password = generate_password_hash('qwerty')
     user_role= 'student'
     user_first = 'Jerry'
     user_last = 'Smith'
     cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
     db.commit()
     user_email = 'michael@stu.com'
-    user_password = 'qwerty'
+    user_password = generate_password_hash('qwerty')
     user_role= 'student'
     user_first = 'Michael'
     user_last = 'Withab'
     cur.execute("INSERT INTO users (email, password, role, first_name, last_name) VALUES(%s, %s, %s, %s, %s)", (user_email, user_password, user_role, user_first, user_last))
     db.commit()
     user_email = 'learnin@stu.com'
-    user_password = 'qwerty'
+    user_password = generate_password_hash('qwerty')
     user_role= 'student'
     user_first = 'Learnin'
     user_last = 'Tocode'

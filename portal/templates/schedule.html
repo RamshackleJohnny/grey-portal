@@ -5,13 +5,23 @@
 
 
 {% block content %}
-<ul>
+<table class="centered">
+  <tr>
+    <th>Course Name</th>
+    <th>Teacher</th>
+    <th>Time</th>
+  </tr>
     {% for session in schedule_list %}
-    <h2>Course Name: {{ session[0] }}</h2>
-    <li>Session: {{ session[3] }}</li>
-    <li>Time: {{ session[1] }}</li>
-    <li>Description: {{ session[2] }}</li>
+    <tr>
+    <td>{{ session[0] }}</td>
+    {% for people in all_teachers  %}
+      {% if session[4] == people[2] %}
+          <td>{{ people[0] }} {{ people [1] }}</td>
+      {% endif %}
     {% endfor %}
-</ul>
+    <td>{{ session[1] }}</td>
+    </tr>
+    {% endfor %}
+</table>
 
 {% endblock %}

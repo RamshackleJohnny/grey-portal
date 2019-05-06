@@ -2,9 +2,11 @@
 <nav>
   <ul>
     <span>Hello, {{ g.user[2] }}!</span>
-    <li><a href="{{ url_for('courses.course_page') }}">Courses</a></li>
     <li><a href="{{ url_for('dash') }}">Dashboard</a></li>
+    <li><a href="{{ url_for('courses.course_page') }}">Courses</a></li>
+    {% if g.user['role']=='teacher' %}
     <li><a href="{{ url_for('sessions.sessions') }}">Sessions</a></li>
+    {% endif %}
     {% if g.user['role']=='student' %}
     <li><a href="{{ url_for('schedule.schedule') }}">Schedule</a></li>
     {% endif %}
